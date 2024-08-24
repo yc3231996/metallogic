@@ -1,5 +1,5 @@
 include:
-  - docker-compose-dify.yml
+  - docker-compose-dify.yaml
 
 services:
   pgadmin:
