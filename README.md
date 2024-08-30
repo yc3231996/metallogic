@@ -1,5 +1,12 @@
 # metallogic
 
+# local env prepare
+1. install docker and docker compose
+2. webapp depends on backend servers, can use cloud services or run them locally using docker
+
+
+
+
 
 # 云环境：
 安装git
