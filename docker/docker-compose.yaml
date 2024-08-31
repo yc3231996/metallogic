@@ -4,7 +4,6 @@ include:
 services:
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -12,5 +11,40 @@ services:
       - "5050:80"
     volumes:
       - ./volumes/pgadmin/data:/var/lib/pgadmin
+
+  mockdb:
+    image: postgres:latest
+    ports:
+      - "5432:5432" #remove later
+    environment:
+      POSTGRES_USER: ${MOCKDB_USER:-datagpt}
+      POSTGRES_PASSWORD: ${MOCKDB_PASSWORD:-datagpt}
+      POSTGRES_DB: ${MOCKDB_DB:-datagpt}
+    volumes:
+      - ./volumes/mockdb/data:/var/lib/postgresql/data
+
+  metallogic-api:
+    image: yc3231996/metallogic-api:latest
+    build:
+      context: ../api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./volumes/metallogic/api:/app
+
+
+  metallogic-admin:
+    image: yc3231996/metallogic-admin:latest
+    build:
+      context: ../webapp-admin
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./volumes/metallogic/admin:/app 
+
+
+
 
 

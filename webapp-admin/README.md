@@ -2,9 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 change backend settings in config/index.ts
-
-First, run the development server:
-
-```bash
 yarn dev
-```
+
+## 使用docker-compose启动
+docker build -t yc3231996/metallogic-admin:latest .
+docker push yc3231996/metallogic-admin:latest
+docker run -d -p 3000:3000 yc3231996/metallogic-admin:latest 

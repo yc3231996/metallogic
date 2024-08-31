@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Database Management API
+  description: API for executing SQL queries and retrieving table schemas.
+  version: 1.0.0
+servers:
+  - url: http://host.docker.internal:5000
+paths:
+  /execute_sql:
+    post:
+      summary: Execute a SQL query
+      description: Executes a SQL query and returns the results.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sql:
+                  type: string
+                  description: The SQL query to execute.
+                workspace:
+                  type: string
+                  description: The workspace to execute the query in.
+              required:
+                - sql
+      responses:
+        '200':
+          description: Query executed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                    description: The result of the SQL query.
+        '500':
+          description: Error executing query.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+  /schema/{workspace}:
+    get:
+      summary: Get table schema
+      description: Retrieves the schema of tables in the specified workspace.
+      parameters:
+        - in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+          description: The workspace to retrieve the schema from.
+      responses:
+        '200':
+          description: Schema retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schema:
+                    type: array
+                    items:
+                      type: object
+                    description: The schema of the tables.
+        '500':
+          description: Error retrieving schema.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+  /{workspace}/metadata:
+    get:
+      summary: Get metadata for workspace
+      description: Retrieves the metadata for the specified workspace.
+      parameters:
+        - in: path
+          name: workspace
+          required: true
+          schema:
+            type: string
+          description: The workspace to retrieve the metadata from.
+      responses:
+        '200':
+          description: Metadata retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Error retrieving metadata.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
