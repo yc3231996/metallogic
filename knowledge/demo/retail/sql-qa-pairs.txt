@@ -1,0 +1,50 @@
+TOP5的销售员:
+SELECT 
+    salesmanname, 
+    SUM(netamount) as total_sales
+FROM 
+    saleswidetable
+GROUP BY 
+    salesmanname
+ORDER BY 
+    total_sales DESC
+LIMIT 5;
+
+哪些促销活动的转化率最高?
+SELECT 
+    promotionname,
+    COUNT(DISTINCT ordernumber) AS total_orders,
+    COUNT(DISTINCT CASE 
+        WHEN netamount > 0 THEN ordernumber 
+    END) AS converted_orders,
+    ROUND(
+        COUNT(DISTINCT CASE 
+            WHEN netamount > 0 THEN ordernumber 
+        END)::NUMERIC 
+        / NULLIF(COUNT(DISTINCT ordernumber), 0) 
+        * 100, 
+        2
+    ) AS conversion_rate
+FROM saleswidetable
+WHERE promotionname IS NOT NULL
+GROUP BY promotionname
+ORDER BY conversion_rate DESC
+LIMIT 10;
+
+我们的销售是否存在明显的季节性波动?哪些产品受季节影响最大?
+SELECT 
+    seasonality,
+    productname,
+    SUM(netamount) as total_sales,
+    COUNT(DISTINCT ordernumber) as order_count,
+    AVG(netamount) as avg_order_value
+FROM 
+    saleswidetable
+WHERE 
+    transactiondate >= DATE_TRUNC('year', CURRENT_DATE) - INTERVAL '1 year'
+GROUP BY 
+    seasonality, productname
+ORDER BY 
+    seasonality,
+    total_sales DESC
+LIMIT 30;

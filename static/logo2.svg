@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9b59b6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景圆 -->
+  <circle cx="100" cy="100" r="90" fill="url(#grad3)" />
+  
+  <!-- 六边形框架 -->
+  <path d="M100 30 L170 65 L170 135 L100 170 L30 135 L30 65 Z" fill="none" stroke="white" stroke-width="3"/>
+  
+  <!-- 内部连接线 -->
+  <line x1="100" y1="30" x2="100" y2="170" stroke="white" stroke-width="2"/>
+  <line x1="30" y1="65" x2="170" y2="135" stroke="white" stroke-width="2"/>
+  <line x1="30" y1="135" x2="170" y2="65" stroke="white" stroke-width="2"/>
+  
+  <!-- 中心眼睛 -->
+  <circle cx="100" cy="100" r="25" fill="white"/>
+  <circle cx="100" cy="100" r="15" fill="#333"/>
+  <circle cx="107" cy="93" r="5" fill="white"/>
+  
+  <!-- 动态旋转效果 -->
+  <g>
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 100 100" to="360 100 100" dur="20s" repeatCount="indefinite"/>
+    <circle cx="170" cy="65" r="8" fill="white"/>
+    <circle cx="170" cy="135" r="8" fill="white"/>
+    <circle cx="100" cy="170" r="8" fill="white"/>
+    <circle cx="30" cy="135" r="8" fill="white"/>
+    <circle cx="30" cy="65" r="8" fill="white"/>
+    <circle cx="100" cy="30" r="8" fill="white"/>
+  </g>
+  
+  <!-- 文字 -->
+  <text x="100" y="185" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle">观心万象</text>
+</svg>

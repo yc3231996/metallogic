@@ -61,7 +61,7 @@ def connect_to_database():
         db_manager = DatabaseManager(connection_string=conn_str)
         tables = db_manager.get_tables()
 
-        # if no exception, save the connection string of workspace
+        # if no exception, UPSERT connection string for the workspace
         _save_workspace(workspace or "default", conn_str)
         
         return jsonify({"tables": tables})

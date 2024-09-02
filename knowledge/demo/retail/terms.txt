@@ -1,0 +1,8 @@
+南区，南区指的是广东，广西，海南，四川这4个省
+金牌销售员，金牌销售员指的省里面销售额排前3的销售人员
+
+## sample:
+Term1: Definition or explanation of Term1
+Term2: Definition or explanation of Term2
+Metric1: Formula or explanation of how Metric1 is derived
+Metric2: Formula or explanation of how Metric2 is derived
