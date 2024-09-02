@@ -1,0 +1,262 @@
+# Line Chart Examples
+## Single Line Chart with Monthly Sales Data
+This example shows a single line representing monthly sales data for a year. The xAxis uses month names, and the yAxis represents sales figures.
+output:
+```chart
+{
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["month", "sales"],
+            ["Jan", 1000],
+            ["Feb", 1200],
+            ["Mar", 900],
+            ["Apr", 1500],
+            ["May", 1300],
+            ["Jun", 1700]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Sales ($)" },
+    "series": [
+        {
+            "type": "line",
+            "encode": { "x": "month", "y": "sales" }
+        }
+    ]
+}
+```
+
+## Multi-Line Chart with Quarterly Revenue for Multiple Years
+This example displays quarterly revenue data for three years. It uses a legend to distinguish between years and customizes the line styles.
+output:
+```chart
+{
+    "legend": { "data": ["2021", "2022", "2023"], "top": "top" },
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["quarter", "2021", "2022", "2023"],
+            ["Q1", 10000, 12000, 15000],
+            ["Q2", 12000, 13000, 16000],
+            ["Q3", 11000, 14000, 17000],
+            ["Q4", 13000, 15000, 18000]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Revenue ($)" },
+    "series": [
+        {
+            "type": "line",
+            "encode": { "x": "quarter", "y": "2021" },
+            "itemStyle": { "color": "#ff7f50" }
+        },
+        {
+            "type": "line",
+            "encode": { "x": "quarter", "y": "2022" },
+            "itemStyle": { "color": "#87cefa" }
+        },
+        {
+            "type": "line",
+            "encode": { "x": "quarter", "y": "2023" },
+            "itemStyle": { "color": "#32cd32" }
+        }
+    ]
+}
+```
+
+## Stacked Area Chart with Daily Website Traffic
+This example shows a stacked area chart representing daily website traffic from different sources. It uses a dataset with date as the x-axis and traffic from various sources.
+output:
+```chart
+{
+    "legend": { "data": ["Direct", "Email", "Social Media"], "top": "top" },
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["date", "Direct", "Email", "Social Media"],
+            ["2023-05-01", 500, 200, 300],
+            ["2023-05-02", 550, 250, 320],
+            ["2023-05-03", 600, 300, 350],
+            ["2023-05-04", 500, 200, 400],
+            ["2023-05-05", 700, 350, 450]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Visitors" },
+    "series": [
+        {
+            "type": "line",
+            "areaStyle": {},
+            "stack": "Total",
+            "encode": { "x": "date", "y": "Direct" }
+        },
+        {
+            "type": "line",
+            "areaStyle": {},
+            "stack": "Total",
+            "encode": { "x": "date", "y": "Email" }
+        },
+        {
+            "type": "line",
+            "areaStyle": {},
+            "stack": "Total",
+            "encode": { "x": "date", "y": "Social Media" }
+        }
+    ]
+}
+```
+
+## Line Chart with Multiple Y-Axes
+This example demonstrates a line chart with two y-axes, showing temperature and precipitation data for a week.
+output:
+```chart
+{
+    "legend": { "data": ["Temperature", "Precipitation"], "top": "top" },
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["date", "temperature", "precipitation"],
+            ["Mon", 22, 2.6],
+            ["Tue", 24, 5.9],
+            ["Wed", 27, 9.0],
+            ["Thu", 23, 26.4],
+            ["Fri", 21, 28.7],
+            ["Sat", 25, 70.7],
+            ["Sun", 26, 175.6]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": [
+        { "type": "value", "name": "Temperature (°C)", "position": "left" },
+        { "type": "value", "name": "Precipitation (mm)", "position": "right" }
+    ],
+    "series": [
+        {
+            "name": "Temperature",
+            "type": "line",
+            "encode": { "x": "date", "y": "temperature" },
+            "yAxisIndex": 0
+        },
+        {
+            "name": "Precipitation",
+            "type": "line",
+            "encode": { "x": "date", "y": "precipitation" },
+            "yAxisIndex": 1
+        }
+    ]
+}
+```
+
+Bar Chart
+This example uses a dataset to define the source data, which includes products and their sales over three years. The data is mapped to the chart by setting xAxis to 'category' and creating three bar series to represent each year's sales. legend and tooltip are included for better readability.
+output:
+```chart
+{
+    "legend": { "top": "bottom" },
+    "tooltip": { "trigger": "axis", "axisPointer": { "type": "shadow" } },
+    "dataset": {
+        "source": [
+            ["product", "2015", "2016", "2017"],
+            ["Matcha Latte", 43.3, 85.8, 93.7],
+            ["Milk Tea", 83.1, 73.4, 55.1],
+            ["Cheese Cocoa", 86.4, 65.2, 82.5],
+            ["Walnut Brownie", 72.4, 53.9, 39.1]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": {},
+    "series": [
+        { "type": "bar" },
+        { "type": "bar" },
+        { "type": "bar" }
+    ]
+}
+```
+
+Pie Chart
+The dataset includes products and their sales. The pie chart series is configured to encode the 'product' as the item name and 'sales' as the value, creating a pie slice for each product's sales. legend and tooltip provide clarity.
+output:
+```chart
+{
+    "legend": { "top": "bottom" },
+    "tooltip": { "trigger": "item" },
+    "dataset": {
+        "source": [
+            ["product", "sales"],
+            ["Matcha Latte", 43.3],
+            ["Milk Tea", 83.1],
+            ["Cheese Cocoa", 86.4],
+            ["Walnut Brownie", 72.4]
+        ]
+    },
+    "series": [{
+        "type": "pie",
+        "encode": {
+            "itemName": "product",
+            "value": "sales"
+        }
+    }]
+}
+```
+
+Scatter Plot
+The dataset contains age, height, and weight data. The scatter plot maps 'age' to the xAxis, 'height' to the yAxis, and includes 'weight' in the tooltip for additional data points. legend and tooltip are configured for better understanding.
+output:
+```chart
+{
+    "legend": { "data": ["Age vs Height"], "top": "bottom" },
+    "tooltip": { "trigger": "item", "axisPointer": { "type": "cross" } },
+    "dataset": {
+        "source": [
+            ["age", "height", "weight"],
+            [5, 110, 20],
+            [6, 115, 22],
+            [7, 120, 24],
+            [8, 125, 26]
+        ]
+    },
+    "xAxis": { "name": "Age" },
+    "yAxis": { "name": "Height" },
+    "series": [{
+        "type": "scatter",
+        "encode": {
+            "x": "age",
+            "y": "height",
+            "tooltip": ["weight"]
+        }
+    }]
+}
+```
+
+Radar Chart
+The dataset includes attributes and scores for three subjects. The radar chart's indicators are set to the attributes, and the series is configured to encode the scores for each subject, creating a radar chart comparing their attributes. legend and tooltip are included for enhanced data presentation.
+output:
+```chart
+{
+    "legend": { "data": ["A", "B", "C"], "top": "bottom" },
+    "tooltip": { "trigger": "item" },
+    "dataset": {
+        "source": [
+            ["attribute", "A", "B", "C"],
+            ["Strength", 90, 80, 70],
+            ["Speed", 70, 60, 80],
+            ["Intelligence", 80, 70, 90]
+        ]
+    },
+    "radar": {
+        "indicator": [
+            { "name": "Strength", "max": 100 },
+            { "name": "Speed", "max": 100 },
+            { "name": "Intelligence", "max": 100 }
+        ]
+    },
+    "series": [{
+        "type": "radar",
+        "encode": {
+            "value": [1, 2, 3],
+            "name": "attribute"
+        }
+    }]
+}
+```

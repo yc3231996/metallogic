@@ -1,0 +1,720 @@
+根据用户的请求以及数据结果，来可视化数据结果。
+首选确定数据结果是否适合用图表来显示，如果不适合，比如数据结果是一个数值，则不输出图表参数。
+如果数据结果适合用图表来展示，则进一步确定用什么图表类型，以及将如何选择横纵轴来表示指标和维度。并按照下面示例，把数据结果转换成对应的正确的ECHARTS图表参数，且严格按照output的格式输出。并确保数据对应到图表的合理性，比如legend, tooltip，横纵坐标等。并对图表进行简要说明。
+
+# Line Chart Examples
+## Single Line Chart with Monthly Sales Data
+This example shows a single line representing monthly sales data for a year. The xAxis uses month names, and the yAxis represents sales figures.
+output:
+```chart
+{
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["month", "sales"],
+            ["Jan", 1000],
+            ["Feb", 1200],
+            ["Mar", 900],
+            ["Apr", 1500],
+            ["May", 1300],
+            ["Jun", 1700]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Sales ($)" },
+    "series": [
+        {
+            "type": "line",
+            "encode": { "x": "month", "y": "sales" }
+        }
+    ]
+}
+```
+
+## Multi-Line Chart with Quarterly Revenue for Multiple Years
+This example displays quarterly revenue data for three years. It uses a legend to distinguish between years and customizes the line styles.
+output:
+```chart
+{
+    "legend": { "data": ["2021", "2022", "2023"], "top": "top" },
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["quarter", "2021", "2022", "2023"],
+            ["Q1", 10000, 12000, 15000],
+            ["Q2", 12000, 13000, 16000],
+            ["Q3", 11000, 14000, 17000],
+            ["Q4", 13000, 15000, 18000]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Revenue ($)" },
+    "series": [
+        {
+            "type": "line",
+            "encode": { "x": "quarter", "y": "2021" }
+        },
+        {
+            "type": "line",
+            "encode": { "x": "quarter", "y": "2022" }
+        },
+        {
+            "type": "line",
+            "encode": { "x": "quarter", "y": "2023" }
+        }
+    ]
+}
+```
+
+## Stacked Area Chart with Daily Website Traffic
+This example shows a stacked area chart representing daily website traffic from different sources. It uses a dataset with date as the x-axis and traffic from various sources.
+output:
+```chart
+{
+    "legend": { "data": ["Direct", "Email", "Social Media"], "top": "top" },
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["date", "Direct", "Email", "Social Media"],
+            ["2023-05-01", 500, 200, 300],
+            ["2023-05-02", 550, 250, 320],
+            ["2023-05-03", 600, 300, 350],
+            ["2023-05-04", 500, 200, 400],
+            ["2023-05-05", 700, 350, 450]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Visitors" },
+    "series": [
+        {
+            "type": "line",
+            "areaStyle": {},
+            "stack": "Total",
+            "encode": { "x": "date", "y": "Direct" }
+        },
+        {
+            "type": "line",
+            "areaStyle": {},
+            "stack": "Total",
+            "encode": { "x": "date", "y": "Email" }
+        },
+        {
+            "type": "line",
+            "areaStyle": {},
+            "stack": "Total",
+            "encode": { "x": "date", "y": "Social Media" }
+        }
+    ]
+}
+```
+
+## Line Chart with Multiple Y-Axes
+This example demonstrates a line chart with two y-axes, showing temperature and precipitation data for a week.
+output:
+```chart
+{
+    "legend": { "data": ["Temperature", "Precipitation"], "top": "top" },
+    "tooltip": { "trigger": "axis" },
+    "dataset": {
+        "source": [
+            ["date", "temperature", "precipitation"],
+            ["Mon", 22, 2.6],
+            ["Tue", 24, 5.9],
+            ["Wed", 27, 9.0],
+            ["Thu", 23, 26.4],
+            ["Fri", 21, 28.7],
+            ["Sat", 25, 70.7],
+            ["Sun", 26, 175.6]
+        ]
+    },
+    "xAxis": { "type": "category" },
+    "yAxis": [
+        { "type": "value", "name": "Temperature (°C)", "position": "left" },
+        { "type": "value", "name": "Precipitation (mm)", "position": "right" }
+    ],
+    "series": [
+        {
+            "name": "Temperature",
+            "type": "line",
+            "encode": { "x": "date", "y": "temperature" },
+            "yAxisIndex": 0
+        },
+        {
+            "name": "Precipitation",
+            "type": "line",
+            "encode": { "x": "date", "y": "precipitation" },
+            "yAxisIndex": 1
+        }
+    ]
+}
+```
+
+# Bar Chart Examples
+## Basic Bar Chart
+This example shows a simple bar chart comparing sales of different products.
+output:
+```chart
+{
+    "tooltip": { "trigger": "axis" },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Sales" },
+    "dataset": {
+        "source": [
+            ["product", "sales"],
+            ["Matcha Latte", 43.3],
+            ["Milk Tea", 83.1],
+            ["Cheese Cocoa", 86.4],
+            ["Walnut Brownie", 72.4]
+        ]
+    },
+    "series": [
+        {
+            "type": "bar",
+            "encode": { "x": "product", "y": "sales" }
+        }
+    ]
+}
+```
+
+## Stacked Bar Chart
+This example demonstrates a stacked bar chart showing sales distribution across different regions.
+output:
+```chart
+{
+    "legend": { "top": "top" },
+    "tooltip": { "trigger": "axis", "axisPointer": { "type": "shadow" } },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Sales ($1000)" },
+    "dataset": {
+        "source": [
+            ["product", "East", "West", "North", "South"],
+            ["Matcha Latte", 43.3, 85.8, 93.7, 55.4],
+            ["Milk Tea", 83.1, 73.4, 55.1, 67.2],
+            ["Cheese Cocoa", 86.4, 65.2, 82.5, 79.8]
+        ]
+    },
+    "series": [
+        { "type": "bar", "stack": "total", "encode": { "x": "product", "y": "East" } },
+        { "type": "bar", "stack": "total", "encode": { "x": "product", "y": "West" } },
+        { "type": "bar", "stack": "total", "encode": { "x": "product", "y": "North" } },
+        { "type": "bar", "stack": "total", "encode": { "x": "product", "y": "South" } }
+    ]
+}
+```
+
+## Horizontal Bar Chart (Bar Chart with Horizontal Orientation)
+This example shows how to create a horizontal bar chart, which is useful for displaying long category names.
+output:
+```chart
+{
+    "tooltip": { "trigger": "axis", "axisPointer": { "type": "shadow" } },
+    "legend": { "top": "top" },
+    "xAxis": { "type": "value", "name": "Revenue (million $)" },
+    "yAxis": { "type": "category", "axisLabel": { "width": 100, "overflow": "truncate" } },
+    "dataset": {
+        "source": [
+            ["department", "2022", "2023"],
+            ["Human Resources", 20.3, 25.8],
+            ["Marketing", 45.1, 53.4],
+            ["Sales", 85.4, 95.2],
+            ["Research and Development", 53.6, 62.1],
+            ["Customer Service", 39.8, 44.5]
+        ]
+    },
+    "series": [
+        { "type": "bar", "encode": { "x": "2022", "y": "department" } },
+        { "type": "bar", "encode": { "x": "2023", "y": "department" } }
+    ]
+}
+```
+
+## Grouped Bar Chart
+This example demonstrates a grouped bar chart comparing quarterly sales over two years.
+output:
+```chart
+{
+    "legend": { "top": "top" },
+    "tooltip": { "trigger": "axis", "axisPointer": { "type": "shadow" } },
+    "xAxis": [
+        {
+            "type": "category",
+            "axisTick": { "show": false },
+            "data": ["Q1", "Q2", "Q3", "Q4"]
+        }
+    ],
+    "yAxis": { "type": "value", "name": "Sales (million $)" },
+    "dataset": {
+        "source": [
+            ["quarter", "2022", "2023"],
+            ["Q1", 45.5, 53.2],
+            ["Q2", 73.4, 85.1],
+            ["Q3", 65.2, 76.8],
+            ["Q4", 53.9, 62.3]
+        ]
+    },
+    "series": [
+        {
+            "type": "bar",
+            "encode": { "x": "quarter", "y": "2022" }
+        },
+        {
+            "type": "bar",
+            "encode": { "x": "quarter", "y": "2023" }
+        }
+    ]
+}
+```
+
+## Bar Chart with Data Labels
+This example shows how to add data labels to bars for direct value display.
+output:
+```chart
+{
+    "tooltip": { "trigger": "axis", "axisPointer": { "type": "shadow" } },
+    "xAxis": { "type": "category" },
+    "yAxis": { "type": "value", "name": "Population (million)" },
+    "dataset": {
+        "source": [
+            ["country", "population"],
+            ["China", 1439],
+            ["India", 1380],
+            ["USA", 331],
+            ["Indonesia", 273],
+            ["Pakistan", 220]
+        ]
+    },
+    "series": [
+        {
+            "type": "bar",
+            "encode": { "x": "country", "y": "population" },
+            "label": {
+                "show": true,
+                "position": "top",
+                "formatter": "{c} M"
+            }
+        }
+    ]
+}
+```
+
+## BAR and LINE Combination Chart
+output:
+```chart
+{
+    "tooltip": {
+        "trigger": "axis",
+        "axisPointer": {
+            "type": "cross",
+            "crossStyle": {
+                "color": "#999"
+            }
+        }
+    },
+    "legend": {
+        "data": ["Sales", "Profit Margin"]
+    },
+    "xAxis": [
+        {
+            "type": "category",
+            "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "axisPointer": {
+                "type": "shadow"
+            }
+        }
+    ],
+    "yAxis": [
+        {
+            "type": "value",
+            "name": "Sales",
+            "min": 0,
+            "max": 250,
+            "interval": 50,
+            "axisLabel": {
+                "formatter": "{value} k$"
+            }
+        },
+        {
+            "type": "value",
+            "name": "Profit Margin",
+            "min": 0,
+            "max": 25,
+            "interval": 5,
+            "axisLabel": {
+                "formatter": "{value}%"
+            }
+        }
+    ],
+    "series": [
+        {
+            "name": "Sales",
+            "type": "bar",
+            "data": [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330]
+        },
+        {
+            "name": "Profit Margin",
+            "type": "line",
+            "yAxisIndex": 1,
+            "data": [10, 12, 8, 14, 7, 18, 15, 13, 14, 16, 20, 22]
+        }
+    ]
+}
+```
+
+
+# Pie Chart Examples,
+## Basic Pie Chart
+This example shows a simple pie chart with percentage display in labels.
+output:
+```chart
+{
+    "tooltip": {
+        "trigger": "item",
+        "formatter": "{a} <br/>{b}: {c} ({d}%)"
+    },
+    "legend": {
+        "orient": "vertical",
+        "left": "left"
+    },
+    "dataset": {
+        "source": [
+            ["product", "sales"],
+            ["Matcha Latte", 43.3],
+            ["Milk Tea", 83.1],
+            ["Cheese Cocoa", 86.4],
+            ["Walnut Brownie", 72.4]
+        ]
+    },
+    "series": [{
+        "name": "Sales",
+        "type": "pie",
+        "radius": "50%",
+        "encode": {
+            "itemName": "product",
+            "value": "sales"
+        },
+        "label": {
+            "formatter": "{b}: {d}%"
+        }
+    }]
+}
+```
+
+## Doughnut Chart
+This example demonstrates a doughnut chart with a custom color palette.
+output:
+```chart
+{
+    "tooltip": {
+        "trigger": "item"
+    },
+    "legend": {
+        "top": "5%",
+        "left": "center"
+    },
+    "dataset": {
+        "source": [
+            ["category", "value"],
+            ["Direct", 335],
+            ["Email", 310],
+            ["Ad Networks", 234],
+            ["Video Ads", 135],
+            ["Search Engines", 1548]
+        ]
+    },
+    "series": [{
+        "name": "Access From",
+        "type": "pie",
+        "radius": ["40%", "70%"],
+        "avoidLabelOverlap": false,
+        "itemStyle": {
+            "borderRadius": 10,
+            "borderColor": "#fff",
+            "borderWidth": 2
+        },
+        "label": {
+            "show": false,
+            "position": "center"
+        },
+        "emphasis": {
+            "label": {
+                "show": true,
+                "fontSize": "40",
+                "fontWeight": "bold"
+            }
+        },
+        "labelLine": {
+            "show": false
+        },
+        "encode": {
+            "itemName": "category",
+            "value": "value"
+        }
+    }]
+}
+```
+
+## Nightingale Rose Chart
+This example shows a Nightingale Rose Chart, where the radius of each sector is proportional to the value.
+output:
+```chart
+{
+    "tooltip": {
+        "trigger": "item",
+        "formatter": "{a} <br/>{b} : {c} ({d}%)"
+    },
+    "legend": {
+        "top": "bottom"
+    },
+    "dataset": {
+        "source": [
+            ["date", "value"],
+            ["2011", 10],
+            ["2012", 25],
+            ["2013", 15],
+            ["2014", 35],
+            ["2015", 20],
+            ["2016", 35],
+            ["2017", 30],
+            ["2018", 40]
+        ]
+    },
+    "series": [{
+        "name": "Nightingale Chart",
+        "type": "pie",
+        "radius": [50, 250],
+        "center": ["50%", "50%"],
+        "roseType": "area",
+        "itemStyle": {
+            "borderRadius": 8
+        },
+        "encode": {
+            "itemName": "date",
+            "value": "value"
+        }
+    }]
+}
+```
+
+## Pie Chart with Custom Label Layout
+This example demonstrates a pie chart with custom label layout to avoid overlapping.
+output:
+```chart
+{
+    "tooltip": {
+        "trigger": "item"
+    },
+    "legend": {
+        "top": "5%",
+        "left": "center"
+    },
+    "dataset": {
+        "source": [
+            ["product", "sales"],
+            ["Matcha Latte", 43.3],
+            ["Milk Tea", 83.1],
+            ["Cheese Cocoa", 86.4],
+            ["Walnut Brownie", 72.4],
+            ["Fruit Salad", 65.2],
+            ["Ice Cream", 53.9]
+        ]
+    },
+    "series": [{
+        "name": "Sales",
+        "type": "pie",
+        "radius": "50%",
+        "encode": {
+            "itemName": "product",
+            "value": "sales"
+        },
+        "label": {
+            "position": "outer",
+            "alignTo": "none",
+            "bleedMargin": 5
+        },
+        "emphasis": {
+            "label": {
+                "show": true,
+                "fontSize": "16",
+                "fontWeight": "bold"
+            }
+        },
+        "labelLayout": {
+            "hideOverlap": true
+        },
+        "labelLine": {
+            "length": 10,
+            "length2": 20,
+            "smooth": true
+        }
+    }]
+}
+```
+
+
+## Scatter Plot
+Scatter plots are crucial for visualizing relationships between two variables and identifying patterns or correlations.
+output:
+```chart
+{
+    "tooltip": {
+        "trigger": "item",
+        "formatter": function (params) {
+            return 'Height: ' + params.data[0] + ' cm<br/>Weight: ' + params.data[1] + ' kg';
+        }
+    },
+    "xAxis": {
+        "type": "value",
+        "name": "Height (cm)"
+    },
+    "yAxis": {
+        "type": "value",
+        "name": "Weight (kg)"
+    },
+    "series": [{
+        "type": "scatter",
+        "data": [
+            [168, 65], [170, 70], [165, 60], [175, 80], [172, 75],
+            [160, 55], [180, 85], [170, 68], [175, 76], [165, 63]
+        ],
+        "symbolSize": 10
+    }]
+}
+```
+
+## Box Plot
+Box plots are essential for displaying the distribution of data, showing median, quartiles, and potential outliers.
+output:
+```chart
+{
+    "title": {
+        "text": "Box Plot of Employee Salaries by Department"
+    },
+    "tooltip": {
+        "trigger": "item",
+        "axisPointer": {
+            "type": "shadow"
+        }
+    },
+    "grid": {
+        "left": "10%",
+        "right": "10%",
+        "bottom": "15%"
+    },
+    "xAxis": {
+        "type": "category",
+        "data": ["HR", "Marketing", "Development", "Sales", "Support"]
+    },
+    "yAxis": {
+        "type": "value",
+        "name": "Salary ($)"
+    },
+    "series": [{
+        "name": "boxplot",
+        "type": "boxplot",
+        "data": [
+            [45000, 55000, 65000, 75000, 85000],
+            [50000, 60000, 72000, 85000, 100000],
+            [60000, 75000, 90000, 105000, 120000],
+            [55000, 67000, 80000, 95000, 110000],
+            [40000, 52000, 63000, 75000, 90000]
+        ]
+    }]
+}
+```
+
+## Heatmap
+Heatmaps are valuable for visualizing patterns in large datasets, especially when dealing with multiple variables or time series data.
+output:
+```chart
+{
+    "tooltip": {
+        "position": "top"
+    },
+    "grid": {
+        "height": "50%",
+        "top": "10%"
+    },
+    "xAxis": {
+        "type": "category",
+        "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        "splitArea": {
+            "show": true
+        }
+    },
+    "yAxis": {
+        "type": "category",
+        "data": ["Morning", "Afternoon", "Evening", "Night"],
+        "splitArea": {
+            "show": true
+        }
+    },
+    "visualMap": {
+        "min": 0,
+        "max": 10,
+        "calculable": true,
+        "orient": "horizontal",
+        "left": "center",
+        "bottom": "15%"
+    },
+    "series": [{
+        "name": "Punch Card",
+        "type": "heatmap",
+        "data": [
+            [0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0],
+            [1, 0, 7], [1, 1, 2], [1, 2, 3], [1, 3, 4],
+            [2, 0, 1], [2, 1, 6], [2, 2, 4], [2, 3, 8],
+            [3, 0, 7], [3, 1, 8], [3, 2, 6], [3, 3, 3],
+            [4, 0, 5], [4, 1, 9], [4, 2, 1], [4, 3, 2],
+            [5, 0, 2], [5, 1, 4], [5, 2, 4], [5, 3, 7],
+            [6, 0, 1], [6, 1, 3], [6, 2, 5], [6, 3, 2]
+        ],
+        "label": {
+            "show": true
+        },
+        "emphasis": {
+            "itemStyle": {
+                "shadowBlur": 10,
+                "shadowColor": "rgba(0, 0, 0, 0.5)"
+            }
+        }
+    }]
+}
+```
+
+## Radar Chart
+Radar charts are useful for comparing multiple quantitative variables, often used in performance analysis or feature comparison.
+output:
+```chart
+{
+    "title": {
+        "text": "Basic Radar Chart"
+    },
+    "legend": {
+        "data": ["Allocated Budget", "Actual Spending"]
+    },
+    "radar": {
+        "indicator": [
+            { "name": "Sales", "max": 6500 },
+            { "name": "Administration", "max": 16000 },
+            { "name": "Information Technology", "max": 30000 },
+            { "name": "Customer Support", "max": 38000 },
+            { "name": "Development", "max": 52000 },
+            { "name": "Marketing", "max": 25000 }
+        ]
+    },
+    "series": [{
+        "name": "Budget vs spending",
+        "type": "radar",
+        "data": [
+            {
+                "value": [4200, 3000, 20000, 35000, 50000, 18000],
+                "name": "Allocated Budget"
+            },
+            {
+                "value": [5000, 14000, 28000, 26000, 42000, 21000],
+                "name": "Actual Spending"
+            }
+        ]
+    }]
+}
+```
