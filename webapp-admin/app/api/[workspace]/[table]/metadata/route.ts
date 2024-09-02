@@ -13,7 +13,9 @@ export async function GET(
       cache: 'no-store',
       headers: {
         'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Pragma': 'no-cache',
+        'X-API-Key': config.apiKey,
+        'Content-Type': 'application/json'
       }
     });
     
@@ -51,7 +53,8 @@ export async function POST(
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Pragma': 'no-cache',
+        'X-API-Key': config.apiKey
       },
       body: JSON.stringify(body)
     });

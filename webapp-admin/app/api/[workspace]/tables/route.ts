@@ -9,7 +9,9 @@ export async function GET(request: NextRequest, { params }: { params: { workspac
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
+          'Pragma': 'no-cache',
+          'X-API-Key': config.apiKey,
+          'Content-Type': 'application/json'
         }
       });
 

@@ -8,7 +8,9 @@ export async function GET() {
       cache: 'no-store',
       headers: {
         'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Pragma': 'no-cache',
+        'X-API-Key': config.apiKey,
+        'Content-Type': 'application/json'
       }
     });
     
