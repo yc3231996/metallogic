@@ -1,0 +1,320 @@
+app:
+  description: provide high quality questions for business analysis based on provided
+    data schema
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: QuestionAgent
+kind: app
+version: 0.1.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: tool
+      id: 1724178251155-source-1724178431245-target
+      source: '1724178251155'
+      sourceHandle: source
+      target: '1724178431245'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: llm
+      id: 1724178431245-source-1724178256379-target
+      source: '1724178431245'
+      sourceHandle: source
+      target: '1724178256379'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: 1724178256379-source-1724178455437-target
+      source: '1724178256379'
+      sourceHandle: source
+      target: '1724178455437'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: 1724178455437-source-1724184957407-target
+      source: '1724178455437'
+      sourceHandle: source
+      target: '1724184957407'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: end
+      id: 1724184957407-source-1724185317687-target
+      source: '1724184957407'
+      sourceHandle: source
+      target: '1724185317687'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: workspace
+          max_length: 100
+          options: []
+          required: true
+          type: text-input
+          variable: workspace
+      height: 89
+      id: '1724178251155'
+      position:
+        x: -119
+        y: 267
+      positionAbsolute:
+        x: -119
+        y: 267
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 数据库结构理解、业务领域分析、生成SQL可回答的分析问题
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: f81cfb79-e007-4639-a618-7f818f413449
+          role: system
+          text: "作为一位资深的数据分析专家，你的任务是分析提供的数据库结构，并提供深入的业务洞察。请按以下步骤进行：\n\n1. 全面理解数据库结构：\n\
+            \   - 分析表之间的关系\n   - 识别关键字段和它们的业务含义\n   - 注意任何数据类型限制或特殊设计\n\n2. 推断业务领域和关键流程：\n\
+            \   - 基于数据结构，推断这个数据库服务于哪个业务领域\n   - 识别可能的核心业务流程\n   - 列出3-5个你认为最重要的关键绩效指标(KPIs)\n\
+            \n3. 生成10个高价值的业务分析问题：\n   - 这些问题应该可以通过SQL查询来回答\n   - 每个问题应该包括其业务重要性和基本的SQL查询思路\n\
+            \n请提供你的详细分析和洞察。"
+        - id: 0456f676-f5b4-41c0-902e-ed5ec9390b26
+          role: user
+          text: ' 以下是数据库表结构描述
+
+            {{#1724178431245.text#}}'
+        selected: false
+        title: process schema
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 141
+      id: '1724178256379'
+      position:
+        x: 627
+        y: 267
+      positionAbsolute:
+        x: 627
+        y: 267
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        provider_id: 4d1e02ed-b1ac-47d1-8319-a6f014a1d240
+        provider_name: Data Engine
+        provider_type: api
+        selected: false
+        title: workspacemetadata_get
+        tool_configurations: {}
+        tool_label: workspacemetadata_get
+        tool_name: workspacemetadata_get
+        tool_parameters:
+          workspace:
+            type: mixed
+            value: '{{#1724178251155.workspace#}}'
+        type: tool
+      height: 53
+      id: '1724178431245'
+      position:
+        x: 282
+        y: 308
+      positionAbsolute:
+        x: 282
+        y: 308
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 生成需要额外数据的分析问题
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: b02c9837-dc91-455a-b776-b2f340f728cc
+          role: system
+          text: '作为一位资深的数据分析专家，基于之前对“数据库结构理解，业务领域的分析，高价值的业务分析问题等“，现在考虑一些更广泛的业务问题，这些问题可能需要额外的数据来回答。请生成5个这样的问题，每个问题应包括：
+
+
+            1. 问题描述
+
+            2. 为什么这个问题对业务很重要
+
+            3. 回答这个问题可能需要的额外数据
+
+            4. 获取这些额外数据的可能方法
+
+
+            请确保这些问题能提供重要的业务洞察，并考虑长期战略价值。'
+        - id: a3610d82-1371-4d26-b2be-37adcc0e1b9b
+          role: user
+          text: '数据库结构理解，业务领域的分析，高价值的业务分析问题：
+
+            {{#1724178256379.text#}}'
+        selected: false
+        title: additional questions
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 125
+      id: '1724178455437'
+      position:
+        x: 1069
+        y: 273
+      positionAbsolute:
+        x: 1069
+        y: 273
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: fdd4118a-66dc-4777-9590-a05bc6599f1c
+          role: system
+          text: "作为一位资深的数据分析专家，请回顾之前所有的分析结果，包括数据库结构理解、业务领域分析、SQL可回答的问题和需要额外数据的问题。现在你的任务是：\n\
+            \n1. 整合并优化这些问题，确保它们:\n   - 相互补充而不重复\n   - 覆盖了关键的业务领域\n   - 具有高度的业务价值和可行性\n\
+            \n2. 将最终的问题列表分为两类：\n   A. 可以通过现有数据库结构回答的问题\n   B. 需要额外数据支持的问题\n\n3. 对每类问题按照重要性和紧迫性进行排序。\n\
+            \n4. 为每个问题添加简短说明，解释其业务价值和潜在影响。\n\n5. 对于A类问题，提供简要的分析思路。\n   对于B类问题，简述获取所需额外数据的建议。\n\
+            \n请提供一个结构化的最终报告，包含A类和B类问题"
+        - id: 0d6f4945-862b-4888-b5bb-f40e7bb44d11
+          role: user
+          text: '数据库结构理解，业务领域的分析，高价值的业务分析问题：
+
+            {{#1724178256379.text#}}
+
+
+            额外数据的问题：
+
+            {{#1724178455437.text#}}'
+        selected: true
+        title: summarize
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 97
+      id: '1724184957407'
+      position:
+        x: 1528
+        y: 293
+      positionAbsolute:
+        x: 1528
+        y: 293
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1724184957407'
+          - text
+          variable: output
+        selected: false
+        title: End
+        type: end
+      height: 89
+      id: '1724185317687'
+      position:
+        x: 1915
+        y: 329
+      positionAbsolute:
+        x: 1915
+        y: 329
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -487.3611111111113
+      y: -72.30555555555554
+      zoom: 0.6944444444444445

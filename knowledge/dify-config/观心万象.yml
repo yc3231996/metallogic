@@ -1,0 +1,111 @@
+app:
+  description: 为用户取数，做数据分析
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: agent-chat
+  name: 观心万象
+kind: app
+model_config:
+  agent_mode:
+    enabled: true
+    max_iteration: 5
+    prompt: null
+    strategy: function_call
+    tools:
+    - enabled: true
+      isDeleted: false
+      notAuthor: false
+      provider_id: c2f07e65-eb16-4ffe-be1d-904ec727135c
+      provider_name: ChartAgent
+      provider_type: workflow
+      tool_label: ChartAgent
+      tool_name: generateChart
+      tool_parameters:
+        data: ''
+        request: ''
+    - enabled: true
+      isDeleted: false
+      notAuthor: false
+      provider_id: fe7ea469-24a7-4d26-b6b4-ea451734831f
+      provider_name: DataAgent
+      provider_type: workflow
+      tool_label: DataAgent
+      tool_name: generateSQLandExecute
+      tool_parameters:
+        request: ''
+        worksapce: ''
+    - enabled: true
+      isDeleted: false
+      notAuthor: false
+      provider_id: 4d1e02ed-b1ac-47d1-8319-a6f014a1d240
+      provider_name: Data Engine
+      provider_type: api
+      tool_label: workspacemetadata_get
+      tool_name: workspacemetadata_get
+      tool_parameters:
+        workspace: ''
+  annotation_reply:
+    enabled: false
+  chat_prompt_config: {}
+  completion_prompt_config: {}
+  dataset_configs:
+    datasets:
+      datasets: []
+    retrieval_model: multiple
+  dataset_query_variable: ''
+  external_data_tools: []
+  file_upload:
+    image:
+      detail: high
+      enabled: true
+      number_limits: 3
+      transfer_methods:
+      - remote_url
+      - local_file
+  model:
+    completion_params:
+      stop: []
+      temperature: 0.2
+      top_p: 0.5
+    mode: chat
+    name: claude-3-5-sonnet-20240620
+    provider: anthropic
+  more_like_this:
+    enabled: false
+  opening_statement: ''
+  pre_prompt: "你是一位经验丰富的数据分析专家。你的任务是为用户的数据需求提供分析帮助，通常是理解需求后，生成执行计划，并执行相应的数据分析步骤。请保持回复专业、简洁。\n\
+    \n把用户的数据请求分成两类：\n一类是非归因问题，这类请求通常情况下，执行计划包含下面2个基本步骤:\n1. 生成SQL并执行获取数据\n2. 进行图表可视化\n\
+    根据需求的复杂程度，可以拆解成更多个基本步骤。调用相应TOOL来执行基本步骤，并输出工具返回的结果。\n\n另外一类是归因问题，当用户的需求是对一个指标变化或者问题进行归因时，请按照以下步骤进行分析：\n\
+    1. 首先明确定义要分析的问题或现象，可以调用工具来确认关键指标的变化幅度等。\n2. 初步判断是否存在明显的外部因素（如市场变化、季节性等），如不适用可跳过此步。\n\
+    3. 调用workspacemetadata_get工具，来获取数据库表结构，分析表结构，识别出可能影响目标问题的维度，对每个维度进行简短说明，解释其潜在影响。\n\
+    4. 如果目标问题是一个指标波动问题，分析各维度的历史表现趋势，看哪些维度是造成指标波动的主要原因。如果需要数据，可以调用相应工具来获取数据，并且输出必要的可视化图表，更直观的展现分析过程和发现。\n\
+    5. 总结各维度分析的主要发现，并给出综合结论\n\n在执行过程中，请注意:\n1. 当需要获取数据的时候，不要自己生成SQL，而是调用相应TOOL来完成。\n\
+    2. 执行各步骤并调用工具时，必须输出工具的完整返回结果，给用户提供必要的反馈。具体要求如下：\n   - 调用SQL工具时，将返回的SQL用Markdown格式输出。\n\
+    \   - 调用可视化工具时，将返回结果中的所有内容原样输出。\n3. 若调用工具异常，根据工具返回的具体情况向用户提供相应的反馈。不要提供建议，只需描述问题。\n\
+    4. 在执行归因问题的步骤时，尽量调用图表工具，并确保输出图表工具的完整返回结果，以直观和友好地展示分析过程和发现。\n\n注意：\n- 调用TOOL的worskpace参数是{{workspace}}\n\
+    - 如果请求与数据查询或分析无关，回复：\"我只能回答数据方面的请求。\"\n- 保持你的回应专业和简洁, 对结论进行总结时，避免重复。\n- 调用可视化工具时，将返回结果中的图表配置输出。\n\
+    - 确保输出SQL以及图表工具返回的图片配置内容，3个`chart开头，3个`包含的部分。"
+  prompt_type: simple
+  retriever_resource:
+    enabled: true
+  sensitive_word_avoidance:
+    configs: []
+    enabled: false
+    type: ''
+  speech_to_text:
+    enabled: false
+  suggested_questions: []
+  suggested_questions_after_answer:
+    enabled: false
+  text_to_speech:
+    enabled: false
+    language: ''
+    voice: ''
+  user_input_form:
+  - text-input:
+      default: ''
+      label: workspace
+      max_length: 100
+      required: true
+      variable: workspace
+version: 0.1.1

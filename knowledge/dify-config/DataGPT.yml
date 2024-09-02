@@ -1,0 +1,871 @@
+app:
+  description: 为用户提供数据分析
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: DataGPT
+kind: app
+version: 0.1.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: answer
+      id: 1718975657163-false-1718976692870-target
+      source: '1718975657163'
+      sourceHandle: 'false'
+      target: '1718976692870'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1720509395229-source-llm-target
+      source: '1720509395229'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1720543282463-source-1720539322719-target
+      source: '1720543282463'
+      sourceHandle: source
+      target: '1720539322719'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: tool
+      id: 1718975657163-true-1720460398281-target
+      source: '1718975657163'
+      sourceHandle: 'true'
+      target: '1720460398281'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1720642171070-source-1720642800846-target
+      source: '1720642171070'
+      sourceHandle: source
+      target: '1720642800846'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: llm
+      id: 1720460398281-source-1720543282463-target
+      source: '1720460398281'
+      sourceHandle: source
+      target: '1720543282463'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: answer
+        targetType: llm
+      id: 1720539322719-source-1720642171070-target
+      source: '1720539322719'
+      sourceHandle: source
+      target: '1720642171070'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: if-else
+      id: llm-source-1718975657163-target
+      source: llm
+      sourceHandle: source
+      target: '1718975657163'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1718856016769-source-1722064820821-target
+      source: '1718856016769'
+      sourceHandle: source
+      target: '1722064820821'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: if-else
+      id: 1722064820821-source-1722068092637-target
+      source: '1722064820821'
+      sourceHandle: source
+      target: '1722068092637'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: tool
+      id: 1722068092637-true-1721546630239-target
+      source: '1722068092637'
+      sourceHandle: 'true'
+      target: '1721546630239'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: answer
+      id: 1722068092637-false-1722068142718-target
+      source: '1722068092637'
+      sourceHandle: 'false'
+      target: '1722068142718'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: knowledge-retrieval
+      id: 1721546630239-source-1722433346222-target
+      source: '1721546630239'
+      sourceHandle: source
+      target: '1722433346222'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: code
+      id: 1722433346222-source-1720509395229-target
+      source: '1722433346222'
+      sourceHandle: source
+      target: '1720509395229'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: workspace
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: workspace
+      height: 90
+      id: '1718856016769'
+      position:
+        x: -3491.2529070238197
+        y: 763.7920111462672
+      positionAbsolute:
+        x: -3491.2529070238197
+        y: 763.7920111462672
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1722433346222'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.2
+            top_p: 0.3
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: 9d80a82a-a5c6-4c39-8ad9-3e66ef14be8e
+          role: system
+          text: "You are a SQL query generator. Your task is to create SQL queries\
+            \ based on user requests and the provided database schema. Follow these\
+            \ instructions carefully:\n\nAnalyze the user's request, the database\
+            \ schema, and the provided term definitions with extreme rigor. Your goal\
+            \ is to generate a SQL query that fulfills the user's request using the\
+            \ available tables and columns in the database schema, while strictly\
+            \ adhering to defined terms and avoiding assumptions.\n\nTo generate the\
+            \ SQL query:\n\n1. Rigorously evaluate if the user's request can be answered\
+            \ using the provided database schema and term definitions:\n   a. Identify\
+            \ all required dimensions, measures, and conditions in the user's query.\n\
+            \   b. For each identified element:\n      - First, check if there is\
+            \ an exact match in the database schema (table or column name).\n    \
+            \  - If not found in the schema, check the <term_definitions> section\
+            \ for an exact match.\n      - Do not assume any relationships or meanings\
+            \ for terms not explicitly defined in either the schema or <term_definitions>.\n\
+            \   c. If a term is defined in <term_definitions>, use only the information\
+            \ provided there to determine how to handle it in the query.\n   d. For\
+            \ terms found in the schema or <term_definitions>, carefully consider\
+            \ data type compatibility.\n   e. If ANY required element is not found\
+            \ as an exact match in either the schema or <term_definitions>, immediately\
+            \ classify the request as insufficient. Do not attempt to derive or infer\
+            \ meanings for undefined terms.\n   f. In case of insufficiency, respond\
+            \ with: \"以我当前的知识，还不能回答您的问题哦\", followed by a detailed explanation of\
+            \ what specific terms or elements are not recognized, and why the request\
+            \ cannot be fulfilled with the current schema and term definitions.\n\
+            \   g. Only proceed to SQL generation if ALL required elements are accounted\
+            \ for with exact matches, either directly from the schema or through the\
+            \ provided term definitions.\n\n2. If the request is valid and properly\
+            \ scoped, identify the relevant tables and columns from the schema that\
+            \ correspond to the user's request. Use only the elements that have been\
+            \ explicitly matched or defined.\n\n3. Determine the appropriate SQL operations\
+            \ (SELECT, JOIN, WHERE, GROUP BY, ORDER, etc.) needed to retrieve the\
+            \ requested data. For queries returning individual records or comparisons,\
+            \ always include an ORDER BY clause to ensure consistent results, and\
+            \ use LIMIT to restrict the number of returned rows, typically to 30 or\
+            \ less, unless a specific larger number is requested.\n\n4. Construct\
+            \ the SQL query using standard SQL syntax. If specific optimizations or\
+            \ dialect-specific features (especially for date handling) are available\
+            \ for the target database type, utilize them for better efficiency and\
+            \ effectiveness. Incorporate calculations or subqueries for derived metrics\
+            \ only if they are explicitly defined in <term_definitions>.\n\n5. If\
+            \ the query involves time-related conditions, make use of the provided\
+            \ current date information.\n\n6. Ensure that the query is optimized and\
+            \ follows best practices, including proper handling of any complex calculations\
+            \ or derivations based on the explicit term definitions.\n\nImportant:\
+            \ If you generate a SQL query, your output must contain ONLY the generated\
+            \ SQL query. Do not include any explanations, comments, or additional\
+            \ text. The query will be executed directly, so it must be valid SQL syntax.\n\
+            \nWrite your SQL query output without any surrounding tags or formatting.\
+            \ Ensure it starts with a SQL keyword (e.g., SELECT, WITH, etc.) and ends\
+            \ with a semicolon (;)."
+        - id: 2076a444-86c2-4663-8b71-a9547dbdfdf5
+          role: user
+          text: 'here is the database schema information:
+
+            <database_schema>
+
+            {{#1721546630239.text#}}
+
+            </database_schema>
+
+            Additional context for specific terms or metrics: <term_definitions>
+
+            {{#context#}}
+
+            </term_definitions>
+
+            here is the user''s data request:
+
+            <user_request>
+
+            {{#sys.query#}}
+
+            </user_request>
+
+            The target database type is:
+
+            <database_type>
+
+            POSTGRES
+
+            </database_type>
+
+
+            The current date is:
+
+            <current_date>
+
+            {{#1720509395229.current_date#}}
+
+            </current_date>'
+        selected: false
+        title: Generate sql
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 98
+      id: llm
+      position:
+        x: -1307.5389491462806
+        y: 654.9731907342522
+      positionAbsolute:
+        x: -1307.5389491462806
+        y: 654.9731907342522
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: d2e37111-f0f5-4e72-a3fb-6df944dcdade
+            value: SELECT
+            varType: string
+            variable_selector:
+            - llm
+            - text
+          id: 'true'
+          logical_operator: and
+        conditions:
+        - comparison_operator: contains
+          id: '1718975743597'
+          value: SELECT
+          variable_selector:
+          - llm
+          - text
+        desc: ''
+        logical_operator: and
+        selected: false
+        title: IF/ELSE 2
+        type: if-else
+      height: 126
+      id: '1718975657163'
+      position:
+        x: -918.0278832759379
+        y: 654.9731907342522
+      positionAbsolute:
+        x: -918.0278832759379
+        y: 654.9731907342522
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#llm.text#}}
+
+
+          '
+        desc: 不需要执行SQL，直接回答
+        selected: false
+        title: direct answer no sql
+        type: answer
+        variables: []
+      height: 135
+      id: '1718976692870'
+      position:
+        x: -369.9830472903312
+        y: 800.7833763894674
+      positionAbsolute:
+        x: -369.9830472903312
+        y: 800.7833763894674
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: 4d1e02ed-b1ac-47d1-8319-a6f014a1d240
+        provider_name: Data Engine
+        provider_type: api
+        selected: false
+        title: execute_sql_post
+        tool_configurations: {}
+        tool_label: execute_sql_post
+        tool_name: execute_sql_post
+        tool_parameters:
+          sql:
+            type: mixed
+            value: '{{#llm.text#}}'
+          workspace:
+            type: mixed
+            value: '{{#1718856016769.workspace#}}'
+        type: tool
+      height: 54
+      id: '1720460398281'
+      position:
+        x: -362.5127102016905
+        y: 474.3577238847362
+      positionAbsolute:
+        x: -362.5127102016905
+        y: 474.3577238847362
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main() -> str:\n    from datetime import date\n    current_date\
+          \ = date.today()\n    return {\n        \"current_date\": str(current_date)\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          current_date:
+            children: null
+            type: string
+        selected: false
+        title: current time
+        type: code
+        variables: []
+      height: 54
+      id: '1720509395229'
+      position:
+        x: -1671.4216501201104
+        y: 654.9731907342522
+      positionAbsolute:
+        x: -1671.4216501201104
+        y: 654.9731907342522
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1720543282463.text#}}
+
+
+          '
+        desc: ''
+        selected: false
+        title: execution output
+        type: answer
+        variables: []
+      height: 107
+      id: '1720539322719'
+      position:
+        x: 711.6075882354751
+        y: 465.6522182517749
+      positionAbsolute:
+        x: 711.6075882354751
+        y: 465.6522182517749
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.2
+            top_p: 0.2
+          mode: chat
+          name: gpt-4o-mini-2024-07-18
+          provider: openai
+        prompt_template:
+        - id: 838765c1-ba07-4f61-8f18-06439c70c190
+          role: system
+          text: "你是一个AI助手,负责以更友好的格式呈现SQL查询信息。你的目标是使输出更易读和简洁。请仔细遵循以下指示:\n1. 格式化SQL语句:\n\
+            在Markdown代码块中输出SQL语句\n改进SQL的格式以提高可读性(例如,适当的缩进、换行)\n示例:\n```sql\nCopySELECT\
+            \ column1, column2 \nFROM table \nWHERE condition;\n```\n2. 记住:\n始终使用Markdown格式来展示结果。\n\
+            除非特别指示,否则不要包含解释或额外回答，确保你的输出清晰易读\n\n始终用中文回答"
+        - id: 46f82c63-c339-42a8-a80a-e1916b70bb85
+          role: user
+          text: '<sql_statement>
+
+            {{#llm.text#}}
+
+            </sql_statement>'
+        selected: false
+        title: execution summarize
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 98
+      id: '1720543282463'
+      position:
+        x: 195.80740200345332
+        y: 474.3577238847362
+      positionAbsolute:
+        x: 195.80740200345332
+        y: 474.3577238847362
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+            top_p: 0.4
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: e2593233-9320-48fd-8bd3-28d44441ef03
+          role: system
+          text: "您是一位人工智能助手,负责帮助用户根据他们的请求可视化数据。\n您的目标是分析数据结果,并使用ECharts提供适当的可视化,或者在不适合可视化的情况下直接输出数据。请始终用中文回答。\n\
+            首先,分析数据结果以确定其是否适合可视化。考虑以下情况:\n1. 如果数据结果为空，仅输出：\"没有查询到数据\"，然后立即结束处理，不要添加任何解释或建议。\n\
+            2. 如果数据结果是单个值，直接输出该值。\n3. 如果数据结果包含多行数据，且适合用表格展示的，用MARKDOWN的格式输出表格。\n4.\
+            \ 如果数据结果包含多个数据点或复杂结构，适合进行图表展示的情况，请继续进行可视化。\n\n可视化过程请遵循以下步骤:\n1. 简要说明您计划如何可视化数据。注意要遵循用户的请求，可视化要贴合用户请求中的要求，比如图表类型，时间范围，显示的信息。如果请求中没有明确说明，你可以进行推断。\n\
+            2. 创建ECharts配置。注意考虑添加工具提示、图例和标签等视觉元素以提高图表的可读性。\n3. 在配置之后,提供图表的简短描述,解释坐标轴或各部分代表的含义。\n\
+            请以下面格式输出ECharts配置字符串:\n```chart\n{\n// Your ECharts configuration here\n\
+            }\n```\n\nImportant：请确保输出的Echarts配置以三个反引号后跟\"chart\"开始,并以三个反引号结束.\n通常完整的Echarts配置会包含下面元素：\n\
+            1. 图表类型(如折线图、柱状图、饼图、散点图)\n2. 包含提供数据的数据集,或系列中的数据\n3. X轴和Y轴配置\n4. 系列配置\n\
+            5. 工具提示和图例(如适用)\n6. 任何其他相关选项以改善可视化效果\n\n确保尽量贴合用户请求中的要求，尤其是图表类型和时间范围。\n\
+            仅在完成可视化后，提供一个简短的图表描述，解释坐标轴或各部分代表的含义。保持这个描述简洁，只包含必要的信息。\n\n以下是处理不同情况的一些示例：\n\
+            1. Empty dataset:\n<data_result>\n{\"data\":[]}\n</data_result>\nOutput:\
+            \ 数据集为空\n2. Single value:\n<data_result>\n{\"data\":42}\n</data_result>\n\
+            Output: 42\n3. Multiple data points (line chart):\n<data_result>\n{\"\
+            data\":[data set goes here]}\n</data_result>\nOutput:\n我将使用折线图来可视化月度销售数据，x轴表示月份，y轴表示销售额。\n\
+            ```chart\n{\n\"tooltip\": { \"trigger\": \"axis\" },\n\"dataset\": {\n\
+            \"source\": [\n[\"month\", \"sales\"],\n[\"Jan\", 1000],\n[\"Feb\", 1200],\n\
+            [\"Mar\", 900],\n[\"Apr\", 1500],\n[\"May\", 1300],\n[\"Jun\", 1700]\n\
+            ]\n},\n\"xAxis\": { \"type\": \"category\" },\n\"yAxis\": { \"type\":\
+            \ \"value\", \"name\": \"Sales\" },\n\"series\": [\n{\n\"type\": \"line\"\
+            ,\n\"encode\": { \"x\": \"month\", \"y\": \"sales\" }\n}\n]\n}\n```\n\
+            这个折线图展示了六个月的销售趋势。横轴（x轴）表示月份，从一月到六月；纵轴（y轴）表示销售额，单位可能是美元或其他货币。我们可以看到销售额在不同月份有所波动，四月达到了最高点。\n\
+            4. Categorical data (bar chart):\n<data_result>\n{\"data\":[data set goes\
+            \ here]}\n</data_result>\nOutput:\n我将使用柱状图来可视化不同产品的销售数据，x轴表示产品名称，y轴表示销售额。\n\
+            ```chart\n{\n\"tooltip\": { \"trigger\": \"axis\" },\n\"xAxis\": { \"\
+            type\": \"category\" },\n\"yAxis\": { \"type\": \"value\", \"name\": \"\
+            Sales\" },\n\"dataset\": {\n\"source\": [\n[\"product\", \"sales\"],\n\
+            [\"Matcha Latte\", 43.3],\n[\"Milk Tea\", 83.1],\n[\"Cheese Cocoa\", 86.4],\n\
+            [\"Walnut Brownie\", 72.4]\n]\n},\n\"series\": [\n{\n\"type\": \"bar\"\
+            ,\n\"encode\": { \"x\": \"product\", \"y\": \"sales\" }\n}\n]\n}\n```\n\
+            这个柱状图展示了四种不同产品的销售情况。横轴（x轴）表示产品名称，包括抹茶拿铁、奶茶、芝士可可和核桃布朗尼；纵轴（y轴）表示销售额，单位可能是数量或金额。从图中可以看出，芝士可可的销售额最高，而抹茶拿铁的销售额最低。\n\
+            5. Proportional data (pie chart):\n<data_result>\n{\"data\":[data set\
+            \ goes here]}\n</data_result>\nOutput:\n我将使用饼图来可视化不同渠道的访问量分布，每个扇形区域代表一个渠道的访问量占比。\n\
+            ```chart\n{\n\"tooltip\": {\n\"trigger\": \"item\",\n\"formatter\": \"\
+            {a} <br/>{b}: {c} ({d}%)\"\n},\n\"legend\": {\n\"orient\": \"vertical\"\
+            ,\n\"left\": \"left\"\n},\n\"dataset\": {\n\"source\": [\n[\"category\"\
+            , \"value\"],\n[\"Direct\", 335],\n[\"Email\", 310],\n[\"Ad Networks\"\
+            , 234],\n[\"Video Ads\", 135],\n[\"Search Engines\", 1548]\n]\n},\n\"\
+            series\": [{\n\"name\": \"Access From\",\n\"type\": \"pie\",\n\"radius\"\
+            : \"50%\",\n\"encode\": {\n\"itemName\": \"category\",\n\"value\": \"\
+            value\"\n},\n\"label\": {\n\"formatter\": \"{b}: {d}%\"\n}\n}]\n}\n```\n\
+            Remember to adapt the chart configuration based on the specific data structure\
+            \ and user request. Always prioritize clarity and readability in your\
+            \ visualizations.\nHere are more knowledge of EChart configuration you\
+            \ can refer to when generate complex chart.\n## BAR and LINE Combination\
+            \ Chart\noutput:\n```chart\n{\n    \"tooltip\": {\n        \"trigger\"\
+            : \"axis\",\n        \"axisPointer\": {\n            \"type\": \"cross\"\
+            ,\n            \"crossStyle\": {\n                \"color\": \"#999\"\n\
+            \            }\n        }\n    },\n    \"legend\": {\n        \"data\"\
+            : [\"Sales\", \"Profit Margin\"]\n    },\n    \"xAxis\": [\n        {\n\
+            \            \"type\": \"category\",\n            \"data\": [\"Jan\",\
+            \ \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\"\
+            , \"Oct\", \"Nov\", \"Dec\"],\n            \"axisPointer\": {\n      \
+            \          \"type\": \"shadow\"\n            }\n        }\n    ],\n  \
+            \  \"yAxis\": [\n        {\n            \"type\": \"value\",\n       \
+            \     \"name\": \"Sales\",\n            \"min\": 0,\n            \"max\"\
+            : 250,\n            \"interval\": 50,\n            \"axisLabel\": {\n\
+            \                \"formatter\": \"{value} k$\"\n            }\n      \
+            \  },\n        {\n            \"type\": \"value\",\n            \"name\"\
+            : \"Profit Margin\",\n            \"min\": 0,\n            \"max\": 25,\n\
+            \            \"interval\": 5,\n            \"axisLabel\": {\n        \
+            \        \"formatter\": \"{value}%\"\n            }\n        }\n    ],\n\
+            \    \"series\": [\n        {\n            \"name\": \"Sales\",\n    \
+            \        \"type\": \"bar\",\n            \"data\": [120, 132, 101, 134,\
+            \ 90, 230, 210, 182, 191, 234, 290, 330]\n        },\n        {\n    \
+            \        \"name\": \"Profit Margin\",\n            \"type\": \"line\"\
+            ,\n            \"yAxisIndex\": 1,\n            \"data\": [10, 12, 8, 14,\
+            \ 7, 18, 15, 13, 14, 16, 20, 22]\n        }\n    ]\n}\n```\n## Line Chart\
+            \ with Multiple Y-Axes\nThis example demonstrates a line chart with two\
+            \ y-axes, showing temperature and precipitation data for a week.\noutput:\n\
+            ```chart\n{\n    \"legend\": { \"data\": [\"Temperature\", \"Precipitation\"\
+            ], \"top\": \"top\" },\n    \"tooltip\": { \"trigger\": \"axis\" },\n\
+            \    \"dataset\": {\n        \"source\": [\n            [\"date\", \"\
+            temperature\", \"precipitation\"],\n            [\"Mon\", 22, 2.6],\n\
+            \            [\"Tue\", 24, 5.9],\n            [\"Wed\", 27, 9.0],\n  \
+            \          [\"Thu\", 23, 26.4],\n            [\"Fri\", 21, 28.7],\n  \
+            \          [\"Sat\", 25, 70.7],\n            [\"Sun\", 26, 175.6]\n  \
+            \      ]\n    },\n    \"xAxis\": { \"type\": \"category\" },\n    \"yAxis\"\
+            : [\n        { \"type\": \"value\", \"name\": \"Temperature (°C)\", \"\
+            position\": \"left\" },\n        { \"type\": \"value\", \"name\": \"Precipitation\
+            \ (mm)\", \"position\": \"right\" }\n    ],\n    \"series\": [\n     \
+            \   {\n            \"name\": \"Temperature\",\n            \"type\": \"\
+            line\",\n            \"encode\": { \"x\": \"date\", \"y\": \"temperature\"\
+            \ },\n            \"yAxisIndex\": 0\n        },\n        {\n         \
+            \   \"name\": \"Precipitation\",\n            \"type\": \"line\",\n  \
+            \          \"encode\": { \"x\": \"date\", \"y\": \"precipitation\" },\n\
+            \            \"yAxisIndex\": 1\n        }\n    ]\n}\n```\n## Scatter Plot\n\
+            Scatter plots are crucial for visualizing relationships between two variables\
+            \ and identifying patterns or correlations.\noutput:\n```chart\n{\n  \
+            \  \"tooltip\": {\n        \"trigger\": \"item\",\n        \"formatter\"\
+            : function (params) {\n            return 'Height: ' + params.data[0]\
+            \ + ' cm<br/>Weight: ' + params.data[1] + ' kg';\n        }\n    },\n\
+            \    \"xAxis\": {\n        \"type\": \"value\",\n        \"name\": \"\
+            Height (cm)\"\n    },\n    \"yAxis\": {\n        \"type\": \"value\",\n\
+            \        \"name\": \"Weight (kg)\"\n    },\n    \"series\": [{\n     \
+            \   \"type\": \"scatter\",\n        \"data\": [\n            [168, 65],\
+            \ [170, 70], [165, 60], [175, 80], [172, 75],\n            [160, 55],\
+            \ [180, 85], [170, 68], [175, 76], [165, 63]\n        ],\n        \"symbolSize\"\
+            : 10\n    }]\n}\n```"
+        - id: ed423505-66a4-4bb2-84f7-18107ec53ef4
+          role: user
+          text: 'Here is the user''s data request:
+
+            <user_request>
+
+            {{#sys.query#}}
+
+            </user_request>
+
+            And here is the corresponding data result:
+
+            <data_result>
+
+            {{#1720460398281.text#}}
+
+            </data_result>'
+        selected: true
+        title: chart prepare
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 98
+      id: '1720642171070'
+      position:
+        x: 1148.8057080225067
+        y: 474.3577238847362
+      positionAbsolute:
+        x: 1148.8057080225067
+        y: 474.3577238847362
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1720642171070.text#}}
+
+
+          '
+        desc: ''
+        selected: false
+        title: display chart options
+        type: answer
+        variables: []
+      height: 107
+      id: '1720642800846'
+      position:
+        x: 1596.9065154825269
+        y: 474.3577238847362
+      positionAbsolute:
+        x: 1596.9065154825269
+        y: 474.3577238847362
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: 4d1e02ed-b1ac-47d1-8319-a6f014a1d240
+        provider_name: Data Engine
+        provider_type: api
+        selected: false
+        title: workspacemetadata_get
+        tool_configurations: {}
+        tool_label: workspacemetadata_get
+        tool_name: workspacemetadata_get
+        tool_parameters:
+          workspace:
+            type: mixed
+            value: '{{#1718856016769.workspace#}}'
+        type: tool
+      height: 54
+      id: '1721546630239'
+      position:
+        x: -2258.625046633063
+        y: 654.9731907342522
+      positionAbsolute:
+        x: -2258.625046633063
+        y: 654.9731907342522
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.5
+            top_p: 0.4
+          mode: chat
+          name: qwen-max-0403
+          provider: tongyi
+        prompt_template:
+        - id: 2afad292-1688-4dbd-99cd-07771fd36a2d
+          role: system
+          text: "# AI数据分析助手提示词\n\n你是一位AI数据分析助手，负责初步筛选与数据查询和分析相关的用户请求。你的任务是判断请求的相关性、复杂度和可能的数据量，不涉及任何具体的业务逻辑判断。\n\
+            \n请按照以下步骤处理用户请求：\n\n1. 分析用户请求，判断是否与数据查询或分析相关。关注数据、统计、数字或分析任务相关的关键词。\n\n\
+            2. 如果请求与数据查询或分析无关，回复：\n   \"我只能回答数据方面的请求哦！\"\n\n3. 如果请求相关，评估以下两点：\n\n\
+            \   a. 复杂度：判断请求是否复杂到无法用一个SQL查询和一个图表来回答。如果是，回复：\n   \"您的问题比较复杂，如果你能简化一下，或者分步提出问题，我可能会回答的更准确哦！\"\
+            \n\n   b. 数据量：评估请求是否可能返回大量数据（可能超过1000条记录）。以下情况可能导致大量数据返回：\n      - 指定的时间范围过大（如\"\
+            去年\"、\"过去三年\"、\"所有\"等），且没有用聚合，或者聚合的颗粒度太细，导致可能会返回大量结果。\n      - 非聚合的全量数据请求（如\"\
+            所有记录\"、\"详细数据\"等）\n   如果符合以上任一情况，回复：\n   \"您的请求可能会返回大量数据。建议您缩小查询范围或增加筛选条件，例如指定更小的时间段或添加其他限制条件。\"\
+            \n\n4. 如果请求是相关的数据查询或分析请求，且不存在上述复杂度和数据量问题，则仅输出：\n   VALID REQUEST\n\n注意：除了以上指定的回复，不要提供任何其他建议或解释。在输出VALID\
+            \ REQUEST时，不要添加任何额外内容。"
+        - id: 5afba990-f2fb-42fc-aa68-032e557fb24f
+          role: user
+          text: 以下是用户请求:{{#sys.query#}}
+        selected: false
+        title: request process
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1722064820821'
+      position:
+        x: -3049.6817627417436
+        y: 763.7920111462672
+      positionAbsolute:
+        x: -3049.6817627417436
+        y: 763.7920111462672
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: a5384aee-47a4-411a-9f52-deef9af19cd8
+            value: VALID REQUEST
+            varType: string
+            variable_selector:
+            - '1722064820821'
+            - text
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: IF/ELSE 3
+        type: if-else
+      height: 126
+      id: '1722068092637'
+      position:
+        x: -2642.8613718033494
+        y: 763.7920111462672
+      positionAbsolute:
+        x: -2642.8613718033494
+        y: 763.7920111462672
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1722064820821.text#}}'
+        desc: ''
+        selected: false
+        title: Answer 7
+        type: answer
+        variables: []
+      height: 107
+      id: '1722068142718'
+      position:
+        x: -2226.4480190267054
+        y: 957.6982268439423
+      positionAbsolute:
+        x: -2226.4480190267054
+        y: 957.6982268439423
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        dataset_ids:
+        - 7503dbc5-31b9-43b7-a6a1-e0f4bff2b4b4
+        desc: ''
+        multiple_retrieval_config:
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: null
+          top_k: 2
+        query_variable_selector:
+        - sys
+        - query
+        retrieval_mode: single
+        selected: false
+        single_retrieval_config:
+          model:
+            completion_params: {}
+            mode: chat
+            name: qwen-max-0403
+            provider: tongyi
+        title: term definitions
+        type: knowledge-retrieval
+      height: 92
+      id: '1722433346222'
+      position:
+        x: -1947.5977337749903
+        y: 545.9561506728106
+      positionAbsolute:
+        x: -1947.5977337749903
+        y: 545.9561506728106
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 35.08903217071065
+      y: -128.8783178578185
+      zoom: 0.5366869235799799

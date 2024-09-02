@@ -1,0 +1,626 @@
+app:
+  description: 为用户的数据请求，生成SQL并执行，返回相应数据
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: DataAgent
+kind: app
+version: 0.1.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1723351608820-source-1723351811177-target
+      source: '1723351608820'
+      sourceHandle: source
+      target: '1723351811177'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1723351873258-source-1723351877554-target
+      source: '1723351873258'
+      sourceHandle: source
+      target: '1723351877554'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: if-else
+      id: 1723351811177-source-1723352871494-target
+      source: '1723351811177'
+      sourceHandle: source
+      target: '1723352871494'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: tool
+      id: 1723352871494-true-1723351850189-target
+      source: '1723352871494'
+      sourceHandle: 'true'
+      target: '1723351850189'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: end
+      id: 1723352871494-false-1723352892876-target
+      source: '1723352871494'
+      sourceHandle: 'false'
+      target: '1723352892876'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: if-else
+      id: 1723351877554-source-1723352920587-target
+      source: '1723351877554'
+      sourceHandle: source
+      target: '1723352920587'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: end
+      id: 1723352920587-false-1723352928008-target
+      source: '1723352920587'
+      sourceHandle: 'false'
+      target: '1723352928008'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: tool
+      id: 1723352920587-true-1723352938750-target
+      source: '1723352920587'
+      sourceHandle: 'true'
+      target: '1723352938750'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: end
+      id: 1723352938750-source-1723352955343-target
+      source: '1723352938750'
+      sourceHandle: source
+      target: '1723352955343'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: knowledge-retrieval
+      id: 1723351850189-source-1723353204722-target
+      source: '1723351850189'
+      sourceHandle: source
+      target: '1723353204722'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: code
+      id: 1723353204722-source-1723351873258-target
+      source: '1723353204722'
+      sourceHandle: source
+      target: '1723351873258'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: worksapce
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: worksapce
+        - label: request
+          max_length: 500
+          options: []
+          required: true
+          type: paragraph
+          variable: request
+      height: 115
+      id: '1723351608820'
+      position:
+        x: -145
+        y: 320
+      positionAbsolute:
+        x: -145
+        y: 320
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 请求预处理
+        model:
+          completion_params:
+            temperature: 0.5
+            top_p: 0.4
+          mode: chat
+          name: gpt-4o-2024-08-06
+          provider: openai
+        prompt_template:
+        - id: cab89f77-96be-4042-a5cc-022266092006
+          role: system
+          text: "你是一位AI数据分析助手，负责初步筛选与数据查询和分析相关的用户请求。你的任务是判断请求的相关性、复杂度和可能的数据量，不涉及任何具体的业务逻辑判断。\n\
+            \n请按照以下步骤处理用户请求：\n\n1. 分析用户请求，判断是否与数据查询或分析相关。关注数据、统计、数字或分析任务相关的关键词。\n\n\
+            2. 如果请求与数据查询或分析无关，回复：\n   \"我只能回答数据方面的请求哦！\"\n\n3. 如果请求相关，评估以下两点：\n\n\
+            \   a. 复杂度：判断请求是否复杂到无法用一个SQL查询和一个图表来回答。如果是，回复：\n   \"您的问题比较复杂，如果你能简化一下，或者分步提出问题，我可能会回答的更准确哦！\"\
+            \n\n   b. 数据量：评估请求是否可能返回大量数据（可能超过1000条记录）。以下情况可能导致大量数据返回：\n      - 指定的时间范围过大（如\"\
+            去年\"、\"过去三年\"、\"所有\"等），且没有用聚合，或者聚合的颗粒度太细，导致可能会返回大量结果。\n      - 非聚合的全量数据请求（如\"\
+            所有记录\"、\"详细数据\"等）\n   如果符合以上任一情况，回复：\n   \"您的请求可能会返回大量数据。建议您缩小查询范围或增加筛选条件，例如指定更小的时间段或添加其他限制条件。\"\
+            \n\n4. 如果请求是相关的数据查询或分析请求，且不存在上述复杂度和数据量问题，则仅输出：\n   VALID REQUEST\n\n注意：除了以上指定的回复，不要提供任何其他建议或解释。在输出VALID\
+            \ REQUEST时，不要添加任何额外内容。"
+        - id: 857db363-f914-432e-9aed-e67dc665b1ce
+          role: user
+          text: 以下是用户请求:{{#1723351608820.request#}}
+        selected: false
+        title: request process
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 125
+      id: '1723351811177'
+      position:
+        x: 305
+        y: 301
+      positionAbsolute:
+        x: 305
+        y: 301
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        provider_id: 4d1e02ed-b1ac-47d1-8319-a6f014a1d240
+        provider_name: Data Engine
+        provider_type: api
+        selected: false
+        title: workspacemetadata_get
+        tool_configurations: {}
+        tool_label: workspacemetadata_get
+        tool_name: workspacemetadata_get
+        tool_parameters:
+          workspace:
+            type: mixed
+            value: '{{#1723351608820.worksapce#}}'
+        type: tool
+      height: 53
+      id: '1723351850189'
+      position:
+        x: 1053
+        y: 271
+      positionAbsolute:
+        x: 1053
+        y: 271
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "\ndef main() -> str:\n    from datetime import date\n    current_date\
+          \ = date.today()\n    return {\n        \"current_date\": str(current_date)\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          current_date:
+            children: null
+            type: string
+        selected: false
+        title: current time
+        type: code
+        variables: []
+      height: 53
+      id: '1723351873258'
+      position:
+        x: 1506
+        y: 254
+      positionAbsolute:
+        x: 1506
+        y: 254
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1723353204722'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.2
+            top_p: 0.3
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: 2b25e8d7-23e0-4a45-b6e5-8a831fef8c47
+          role: system
+          text: "You are a SQL query generator. Your task is to create SQL queries\
+            \ based on user requests and the provided database schema. Follow these\
+            \ instructions carefully:\n\nAnalyze the user's request, the database\
+            \ schema, and the provided term definitions with extreme rigor. Your goal\
+            \ is to generate a SQL query that fulfills the user's request using the\
+            \ available tables and columns in the database schema, while strictly\
+            \ adhering to defined terms and avoiding assumptions.\n\nTo generate the\
+            \ SQL query:\n\n1. Rigorously evaluate if the user's request can be answered\
+            \ using the provided database schema and term definitions:\n   a. Identify\
+            \ all required dimensions, measures, and conditions in the user's query.\n\
+            \   b. For each identified element:\n      - First, check if there is\
+            \ an exact match in the database schema (table or column name).\n    \
+            \  - If not found in the schema, check the <term_definitions> section\
+            \ for an exact match.\n      - Do not assume any relationships or meanings\
+            \ for terms not explicitly defined in either the schema or <term_definitions>.\n\
+            \   c. If a term is defined in <term_definitions>, use only the information\
+            \ provided there to determine how to handle it in the query.\n   d. For\
+            \ terms found in the schema or <term_definitions>, carefully consider\
+            \ data type compatibility.\n   e. If ANY required element is not found\
+            \ as an exact match in either the schema or <term_definitions>, immediately\
+            \ classify the request as insufficient. Do not attempt to derive or infer\
+            \ meanings for undefined terms.\n   f. In case of insufficiency, respond\
+            \ with: \"以我当前的知识，还不能回答您的问题哦\", followed by a detailed explanation of\
+            \ what specific terms or elements are not recognized, and why the request\
+            \ cannot be fulfilled with the current schema and term definitions.\n\
+            \   g. Only proceed to SQL generation if ALL required elements are accounted\
+            \ for with exact matches, either directly from the schema or through the\
+            \ provided term definitions.\n\n2. If the request is valid and properly\
+            \ scoped, identify the relevant tables and columns from the schema that\
+            \ correspond to the user's request. Use only the elements that have been\
+            \ explicitly matched or defined.\n\n3. Determine the appropriate SQL operations\
+            \ (SELECT, JOIN, WHERE, GROUP BY, ORDER, etc.) needed to retrieve the\
+            \ requested data. For queries returning individual records or comparisons,\
+            \ always include an ORDER BY clause to ensure consistent results, and\
+            \ use LIMIT to restrict the number of returned rows, typically to 30 or\
+            \ less, unless a specific larger number is requested.\n\n4. Construct\
+            \ the SQL query using standard SQL syntax. If specific optimizations or\
+            \ dialect-specific features (especially for date handling) are available\
+            \ for the target database type, utilize them for better efficiency and\
+            \ effectiveness. Incorporate calculations or subqueries for derived metrics\
+            \ only if they are explicitly defined in <term_definitions>.\n\n5. If\
+            \ the query involves time-related conditions, make use of the provided\
+            \ current date information.\n\n6. Ensure that the query is optimized and\
+            \ follows best practices, including proper handling of any complex calculations\
+            \ or derivations based on the explicit term definitions.\n\nImportant:\
+            \ If you generate a SQL query, your output must contain ONLY the generated\
+            \ SQL query. Do not include any explanations, comments, or additional\
+            \ text. The query will be executed directly, so it must be valid SQL syntax.\n\
+            \nWrite your SQL query output without any surrounding tags or formatting.\
+            \ Ensure it starts with a SQL keyword (e.g., SELECT, WITH, etc.) and ends\
+            \ with a semicolon (;)."
+        - id: 4cf00403-0d04-4a95-8476-d033323d209d
+          role: user
+          text: 'here is the database schema information:
+
+            <database_schema>
+
+            {{#1723351850189.text#}}
+
+            </database_schema>
+
+            Additional context for specific terms or metrics: <term_definitions>
+
+            {{#context#}}
+
+            </term_definitions>
+
+            here is the user''s data request:
+
+            <user_request>
+
+            {{#1723351608820.request#}}
+
+            </user_request>
+
+            The target database type is:
+
+            <database_type>
+
+            POSTGRES
+
+            </database_type>
+
+
+            The current date is:
+
+            <current_date>
+
+            {{#1723351873258.current_date#}}
+
+            </current_date>'
+        selected: false
+        title: generate sql
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 97
+      id: '1723351877554'
+      position:
+        x: 1924
+        y: 220
+      positionAbsolute:
+        x: 1924
+        y: 220
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: 341b162f-574d-4a44-a001-37d8e0621150
+            value: VALID REQUEST
+            varType: string
+            variable_selector:
+            - '1723351811177'
+            - text
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: IF/ELSE
+        type: if-else
+      height: 125
+      id: '1723352871494'
+      position:
+        x: 653
+        y: 438
+      positionAbsolute:
+        x: 653
+        y: 438
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1723351811177'
+          - text
+          variable: output
+        selected: false
+        title: End
+        type: end
+      height: 89
+      id: '1723352892876'
+      position:
+        x: 1198
+        y: 550
+      positionAbsolute:
+        x: 1198
+        y: 550
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: 6d7372ce-879c-4451-801f-828a62f2fd03
+            value: SELECT
+            varType: string
+            variable_selector:
+            - '1723351877554'
+            - text
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: IF/ELSE 2
+        type: if-else
+      height: 125
+      id: '1723352920587'
+      position:
+        x: 2186
+        y: 397
+      positionAbsolute:
+        x: 2186
+        y: 397
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1723351877554'
+          - text
+          variable: output
+        selected: false
+        title: End 2
+        type: end
+      height: 89
+      id: '1723352928008'
+      position:
+        x: 2568
+        y: 580
+      positionAbsolute:
+        x: 2568
+        y: 580
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        provider_id: 4d1e02ed-b1ac-47d1-8319-a6f014a1d240
+        provider_name: Data Engine
+        provider_type: api
+        selected: false
+        title: execute_sql_post
+        tool_configurations: {}
+        tool_label: execute_sql_post
+        tool_name: execute_sql_post
+        tool_parameters:
+          sql:
+            type: mixed
+            value: '{{#1723351877554.text#}}'
+          workspace:
+            type: mixed
+            value: '{{#1723351608820.worksapce#}}'
+        type: tool
+      height: 53
+      id: '1723352938750'
+      position:
+        x: 2575
+        y: 238
+      positionAbsolute:
+        x: 2575
+        y: 238
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1723351877554'
+          - text
+          variable: sql
+        - value_selector:
+          - '1723352938750'
+          - text
+          variable: data
+        selected: true
+        title: End 3
+        type: end
+      height: 115
+      id: '1723352955343'
+      position:
+        x: 3235
+        y: 220
+      positionAbsolute:
+        x: 3235
+        y: 220
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        dataset_ids:
+        - 7503dbc5-31b9-43b7-a6a1-e0f4bff2b4b4
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: reranking_model
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: null
+          top_k: 4
+        query_variable_selector:
+        - '1723351608820'
+        - request
+        retrieval_mode: single
+        selected: false
+        single_retrieval_config:
+          model:
+            completion_params: {}
+            mode: chat
+            name: qwen-max-0403
+            provider: tongyi
+        title: term definitions
+        type: knowledge-retrieval
+      height: 91
+      id: '1723353204722'
+      position:
+        x: 1304
+        y: 109
+      positionAbsolute:
+        x: 1304
+        y: 109
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -779.1574988716573
+      y: 6.586081813116209
+      zoom: 0.505141388836927

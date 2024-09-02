@@ -1,0 +1,321 @@
+app:
+  description: 根据数据生成相应的图表
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: ChartAgent
+kind: app
+version: 0.1.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1723353865637-source-1723354776675-target
+      source: '1723353865637'
+      sourceHandle: source
+      target: '1723354776675'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: 1723354776675-source-1724647015716-target
+      source: '1723354776675'
+      sourceHandle: source
+      target: '1724647015716'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: end
+      id: 1724647015716-source-1723357114432-target
+      source: '1724647015716'
+      sourceHandle: source
+      target: '1723357114432'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: request
+          max_length: 200
+          options: []
+          required: true
+          type: paragraph
+          variable: request
+        - label: data
+          max_length: 5000
+          options: []
+          required: true
+          type: paragraph
+          variable: data
+      height: 115
+      id: '1723353865637'
+      position:
+        x: 177
+        y: 299
+      positionAbsolute:
+        x: 177
+        y: 299
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+            top_p: 0.4
+          mode: chat
+          name: claude-3-5-sonnet-20240620
+          provider: anthropic
+        prompt_template:
+        - id: 46d47f09-d670-4f5d-bba1-b0bb2ab917e4
+          role: system
+          text: "您是一位人工智能助手,负责帮助用户根据他们的请求可视化数据。\n您的目标是分析数据结果,并使用ECharts提供适当的可视化,或者在不适合可视化的情况下直接输出数据。请始终用中文回答。\n\
+            首先,分析数据结果以确定其是否适合可视化。考虑以下情况:\n1. 如果数据结果为空，仅输出：\"没有查询到数据\"，然后立即结束处理，不要添加任何解释或建议。\n\
+            2. 如果数据结果是单个值，直接输出该值。\n3. 如果数据结果包含多行数据，且适合用表格展示的，用MARKDOWN的格式输出表格。\n4.\
+            \ 如果数据结果包含多个数据点或复杂结构，适合进行图表展示的情况，请继续进行可视化。\n\n可视化过程请遵循以下步骤:\n1. 简要说明您计划如何可视化数据。注意要遵循用户的请求，可视化要贴合用户请求中的要求，比如图表类型，时间范围，显示的信息。如果请求中没有明确说明，你可以进行推断。\n\
+            2. 创建ECharts配置。注意考虑添加工具提示、图例和标签等视觉元素以提高图表的可读性。\n3. 在配置之后,提供图表的简短描述,解释坐标轴或各部分代表的含义。\n\
+            请以下面格式输出ECharts配置字符串:\n```chart\n{\n// Your ECharts configuration here\n\
+            }\n```\n\nImportant：请确保输出的Echarts配置以三个反引号后跟\"chart\"开始,并以三个反引号结束.\n通常完整的Echarts配置会包含下面元素：\n\
+            1. 图表类型(如折线图、柱状图、饼图、散点图)\n2. 包含提供数据的数据集,或系列中的数据\n3. X轴和Y轴配置\n4. 系列配置\n\
+            5. 工具提示和图例(如适用)\n6. 任何其他相关选项以改善可视化效果\n\n确保尽量贴合用户请求中的要求，尤其是图表类型和时间范围。\n\
+            仅在完成可视化后，提供一个简短的图表描述，解释坐标轴或各部分代表的含义。保持这个描述简洁，只包含必要的信息。\n\n以下是处理不同情况的一些示例：\n\
+            1. Empty dataset:\n<data_result>\n{\"data\":[]}\n</data_result>\nOutput:\
+            \ 数据集为空\n2. Single value:\n<data_result>\n{\"data\":42}\n</data_result>\n\
+            Output: 42\n3. Multiple data points (line chart):\n<data_result>\n{\"\
+            data\":[data set goes here]}\n</data_result>\nOutput:\n我将使用折线图来可视化月度销售数据，x轴表示月份，y轴表示销售额。\n\
+            ```chart\n{\n\"tooltip\": { \"trigger\": \"axis\" },\n\"dataset\": {\n\
+            \"source\": [\n[\"month\", \"sales\"],\n[\"Jan\", 1000],\n[\"Feb\", 1200],\n\
+            [\"Mar\", 900],\n[\"Apr\", 1500],\n[\"May\", 1300],\n[\"Jun\", 1700]\n\
+            ]\n},\n\"xAxis\": { \"type\": \"category\" },\n\"yAxis\": { \"type\":\
+            \ \"value\", \"name\": \"Sales\" },\n\"series\": [\n{\n\"type\": \"line\"\
+            ,\n\"encode\": { \"x\": \"month\", \"y\": \"sales\" }\n}\n]\n}\n```\n\
+            这个折线图展示了六个月的销售趋势。横轴（x轴）表示月份，从一月到六月；纵轴（y轴）表示销售额，单位可能是美元或其他货币。我们可以看到销售额在不同月份有所波动，四月达到了最高点。\n\
+            4. Categorical data (bar chart):\n<data_result>\n{\"data\":[data set goes\
+            \ here]}\n</data_result>\nOutput:\n我将使用柱状图来可视化不同产品的销售数据，x轴表示产品名称，y轴表示销售额。\n\
+            ```chart\n{\n\"tooltip\": { \"trigger\": \"axis\" },\n\"xAxis\": { \"\
+            type\": \"category\" },\n\"yAxis\": { \"type\": \"value\", \"name\": \"\
+            Sales\" },\n\"dataset\": {\n\"source\": [\n[\"product\", \"sales\"],\n\
+            [\"Matcha Latte\", 43.3],\n[\"Milk Tea\", 83.1],\n[\"Cheese Cocoa\", 86.4],\n\
+            [\"Walnut Brownie\", 72.4]\n]\n},\n\"series\": [\n{\n\"type\": \"bar\"\
+            ,\n\"encode\": { \"x\": \"product\", \"y\": \"sales\" }\n}\n]\n}\n```\n\
+            这个柱状图展示了四种不同产品的销售情况。横轴（x轴）表示产品名称，包括抹茶拿铁、奶茶、芝士可可和核桃布朗尼；纵轴（y轴）表示销售额，单位可能是数量或金额。从图中可以看出，芝士可可的销售额最高，而抹茶拿铁的销售额最低。\n\
+            5. Proportional data (pie chart):\n<data_result>\n{\"data\":[data set\
+            \ goes here]}\n</data_result>\nOutput:\n我将使用饼图来可视化不同渠道的访问量分布，每个扇形区域代表一个渠道的访问量占比。\n\
+            ```chart\n{\n\"tooltip\": {\n\"trigger\": \"item\",\n\"formatter\": \"\
+            {a} <br/>{b}: {c} ({d}%)\"\n},\n\"legend\": {\n\"orient\": \"vertical\"\
+            ,\n\"left\": \"left\"\n},\n\"dataset\": {\n\"source\": [\n[\"category\"\
+            , \"value\"],\n[\"Direct\", 335],\n[\"Email\", 310],\n[\"Ad Networks\"\
+            , 234],\n[\"Video Ads\", 135],\n[\"Search Engines\", 1548]\n]\n},\n\"\
+            series\": [{\n\"name\": \"Access From\",\n\"type\": \"pie\",\n\"radius\"\
+            : \"50%\",\n\"encode\": {\n\"itemName\": \"category\",\n\"value\": \"\
+            value\"\n},\n\"label\": {\n\"formatter\": \"{b}: {d}%\"\n}\n}]\n}\n```\n\
+            Remember to adapt the chart configuration based on the specific data structure\
+            \ and user request. Always prioritize clarity and readability in your\
+            \ visualizations.\nHere are more knowledge of EChart configuration you\
+            \ can refer to when generate complex chart.\n## BAR and LINE Combination\
+            \ Chart\noutput:\n```chart\n{\n    \"tooltip\": {\n        \"trigger\"\
+            : \"axis\",\n        \"axisPointer\": {\n            \"type\": \"cross\"\
+            ,\n            \"crossStyle\": {\n                \"color\": \"#999\"\n\
+            \            }\n        }\n    },\n    \"legend\": {\n        \"data\"\
+            : [\"Sales\", \"Profit Margin\"]\n    },\n    \"xAxis\": [\n        {\n\
+            \            \"type\": \"category\",\n            \"data\": [\"Jan\",\
+            \ \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\"\
+            , \"Oct\", \"Nov\", \"Dec\"],\n            \"axisPointer\": {\n      \
+            \          \"type\": \"shadow\"\n            }\n        }\n    ],\n  \
+            \  \"yAxis\": [\n        {\n            \"type\": \"value\",\n       \
+            \     \"name\": \"Sales\",\n            \"min\": 0,\n            \"max\"\
+            : 250,\n            \"interval\": 50,\n            \"axisLabel\": {\n\
+            \                \"formatter\": \"{value} k$\"\n            }\n      \
+            \  },\n        {\n            \"type\": \"value\",\n            \"name\"\
+            : \"Profit Margin\",\n            \"min\": 0,\n            \"max\": 25,\n\
+            \            \"interval\": 5,\n            \"axisLabel\": {\n        \
+            \        \"formatter\": \"{value}%\"\n            }\n        }\n    ],\n\
+            \    \"series\": [\n        {\n            \"name\": \"Sales\",\n    \
+            \        \"type\": \"bar\",\n            \"data\": [120, 132, 101, 134,\
+            \ 90, 230, 210, 182, 191, 234, 290, 330]\n        },\n        {\n    \
+            \        \"name\": \"Profit Margin\",\n            \"type\": \"line\"\
+            ,\n            \"yAxisIndex\": 1,\n            \"data\": [10, 12, 8, 14,\
+            \ 7, 18, 15, 13, 14, 16, 20, 22]\n        }\n    ]\n}\n```\n## Line Chart\
+            \ with Multiple Y-Axes\nThis example demonstrates a line chart with two\
+            \ y-axes, showing temperature and precipitation data for a week.\noutput:\n\
+            ```chart\n{\n    \"legend\": { \"data\": [\"Temperature\", \"Precipitation\"\
+            ], \"top\": \"top\" },\n    \"tooltip\": { \"trigger\": \"axis\" },\n\
+            \    \"dataset\": {\n        \"source\": [\n            [\"date\", \"\
+            temperature\", \"precipitation\"],\n            [\"Mon\", 22, 2.6],\n\
+            \            [\"Tue\", 24, 5.9],\n            [\"Wed\", 27, 9.0],\n  \
+            \          [\"Thu\", 23, 26.4],\n            [\"Fri\", 21, 28.7],\n  \
+            \          [\"Sat\", 25, 70.7],\n            [\"Sun\", 26, 175.6]\n  \
+            \      ]\n    },\n    \"xAxis\": { \"type\": \"category\" },\n    \"yAxis\"\
+            : [\n        { \"type\": \"value\", \"name\": \"Temperature (°C)\", \"\
+            position\": \"left\" },\n        { \"type\": \"value\", \"name\": \"Precipitation\
+            \ (mm)\", \"position\": \"right\" }\n    ],\n    \"series\": [\n     \
+            \   {\n            \"name\": \"Temperature\",\n            \"type\": \"\
+            line\",\n            \"encode\": { \"x\": \"date\", \"y\": \"temperature\"\
+            \ },\n            \"yAxisIndex\": 0\n        },\n        {\n         \
+            \   \"name\": \"Precipitation\",\n            \"type\": \"line\",\n  \
+            \          \"encode\": { \"x\": \"date\", \"y\": \"precipitation\" },\n\
+            \            \"yAxisIndex\": 1\n        }\n    ]\n}\n```\n## Scatter Plot\n\
+            Scatter plots are crucial for visualizing relationships between two variables\
+            \ and identifying patterns or correlations.\noutput:\n```chart\n{\n  \
+            \  \"tooltip\": {\n        \"trigger\": \"item\",\n        \"formatter\"\
+            : function (params) {\n            return 'Height: ' + params.data[0]\
+            \ + ' cm<br/>Weight: ' + params.data[1] + ' kg';\n        }\n    },\n\
+            \    \"xAxis\": {\n        \"type\": \"value\",\n        \"name\": \"\
+            Height (cm)\"\n    },\n    \"yAxis\": {\n        \"type\": \"value\",\n\
+            \        \"name\": \"Weight (kg)\"\n    },\n    \"series\": [{\n     \
+            \   \"type\": \"scatter\",\n        \"data\": [\n            [168, 65],\
+            \ [170, 70], [165, 60], [175, 80], [172, 75],\n            [160, 55],\
+            \ [180, 85], [170, 68], [175, 76], [165, 63]\n        ],\n        \"symbolSize\"\
+            : 10\n    }]\n}\n```"
+        - id: 5b282e7a-87c0-42e6-baee-c8fb51ddf876
+          role: user
+          text: 'Here is the user''s data request:
+
+            <user_request>
+
+            {{#1723353865637.request#}}
+
+            </user_request>
+
+            And here is the corresponding data result:
+
+            <data_result>
+
+            {{#1723353865637.data#}}
+
+            </data_result>'
+        selected: false
+        title: chart prepare
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: true
+      height: 97
+      id: '1723354776675'
+      position:
+        x: 766
+        y: 299
+      positionAbsolute:
+        x: 766
+        y: 299
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1724647015716'
+          - text
+          variable: chartoption
+        selected: false
+        title: End
+        type: end
+      height: 89
+      id: '1723357114432'
+      position:
+        x: 1500.9220685069204
+        y: 271.90685082888047
+      positionAbsolute:
+        x: 1500.9220685069204
+        y: 271.90685082888047
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: gpt-4o-mini-2024-07-18
+          provider: openai
+        prompt_template:
+        - id: 1569c6fe-f3cd-4b8f-bf27-a988aadcdbd2
+          role: system
+          text: '你的任务是做文本提取，从输入文本中，提取出来3个`chart开始，3个`结束的ECharts的配置的文本部分，并仅输出提取出来的内容，不要有任何额外的文字输出
+
+
+            '
+        - role: user
+          text: '输入：
+
+            {{#1723354776675.text#}}'
+        selected: true
+        title: chart extract
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: false
+      height: 97
+      id: '1724647015716'
+      position:
+        x: 1126.4631999967157
+        y: 428.23233149198495
+      positionAbsolute:
+        x: 1126.4631999967157
+        y: 428.23233149198495
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -694.4354610477435
+      y: -95.14816899586174
+      zoom: 0.9227424926537982
