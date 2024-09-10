@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, current_app
 import json
 import logging
+import traceback
 from functools import wraps
 from dbengine import DatabaseManager
 from metastore import MetadataStore
 from api_key_manager import load_api_keys
+from vectordb import QuestionSql, WeaviateDB
 
 app = Flask(__name__)
 
@@ -13,7 +15,6 @@ def require_api_key(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         api_key = request.headers.get('X-API-Key')
-        print("in require_api_key:", api_key)
         if not api_key:
             logging.warning("API request without key")
             return jsonify({"error": "No API key provided"}), 401
@@ -216,6 +217,83 @@ def execute_sql():
         return jsonify({"data": result})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# get all QuestionSql from vector store
+@app.route('/<workspace>/question_sql', methods=['GET'])
+@require_api_key
+def get_all_question_sql(workspace):
+    try:
+        _check_workspace_exist(workspace)
+
+        question_sql_db = WeaviateDB(QuestionSql, workspace)
+        all_question_sql = question_sql_db.get_all()
+        return jsonify({
+            "data": [{
+                "id": qs.id,
+                "question": qs.question,
+                "sql": qs.sql
+            } for qs in all_question_sql]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# rebuild QuestionSql
+@app.route('/<workspace>/question_sql/rebuild', methods=['POST'])
+@require_api_key
+def rebuild_question_sql(workspace):
+    try:
+        _check_workspace_exist(workspace)
+
+        data = request.get_json()
+        question_sql_list = data.get('question_sql_list', [])
+        
+        if not question_sql_list:
+            return jsonify({"error": "QuestionSql list is empty"}), 400
+        
+        question_sql_objects = [
+            QuestionSql(question=item['question'], sql=item['sql'])
+            for item in question_sql_list
+        ]
+        
+        question_sql_db = WeaviateDB(QuestionSql, workspace)
+        question_sql_db.rebuild_collection(question_sql_objects)
+        
+        return jsonify({"message": "QuestionSql rebuild successfully", "count": len(question_sql_objects)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# search QuestionSql based on question,
+@app.route('/<workspace>/question_sql/search', methods=['POST'])
+@require_api_key
+def search_question_sql(workspace):
+    try:
+        _check_workspace_exist(workspace)
+
+        data = request.get_json()
+        question = data.get('question')
+        
+        if not question:
+            return jsonify({"error": "Question is empty"}), 400
+        
+        question_sql_db = WeaviateDB(QuestionSql, workspace)
+        results = question_sql_db.search_similar(question, 2)
+        
+        # not contain score, may need to enhance to contain score, certainty, distance
+        return jsonify({
+            "data": [{
+                "id": result.id,
+                "question": result.question,
+                "sql": result.sql
+            } for result in results]
+        })
+    except Exception as e:
+        current_app.logger.error(f"Error in execute_sql: {str(e)}")
+        current_app.logger.error(traceback.format_exc())
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == '__main__':
