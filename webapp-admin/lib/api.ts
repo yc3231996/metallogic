@@ -20,6 +20,7 @@ export interface TableMetadata {
   fields: Field[];
 }
 
+//the big metadata JSON
 export type WorkspaceMetadata = string;
 
 // export interface FieldMetadata {
@@ -28,6 +29,13 @@ export type WorkspaceMetadata = string;
 //   comment: string;
 //   selected?: boolean;
 // }
+
+export interface QuestionSqlPair {
+  id?: string;
+  question: string;
+  sql: string;
+}
+
 
 const buildApiUrl = (path: string) => `${config.publicApiBaseUrl}${path}`;
 
@@ -83,3 +91,28 @@ export const fetchWorkspaceMetadata = async (workspace: string): Promise<Workspa
   }
   return response.json();
 }
+
+
+// for question sql training
+export const fetchQuestionSqlPairs = async (workspace: string): Promise<QuestionSqlPair[]> => {
+  const response = await fetch(buildApiUrl(`/${workspace}/question_sql`));
+  if (!response.ok) {
+    throw new Error(`Failed to fetch question-sql pairs for workspace ${workspace}`);
+  }
+  const data = await response.json();
+  return data.data;
+};
+
+export const buildQuestionSqlPairs = async (workspace: string, params: { question_sql_list: QuestionSqlPair[] }): Promise<{ count: number, message: string }> => {
+  const response = await fetch(buildApiUrl(`/${workspace}/question_sql/rebuild`), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to build question-sql pairs');
+  }
+  return response.json();
+};

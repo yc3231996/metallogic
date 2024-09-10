@@ -8,3 +8,10 @@ yarn dev
 docker build -t yc3231996/metallogic-admin:latest .
 docker push yc3231996/metallogic-admin:latest
 docker run -d -p 3000:3000 yc3231996/metallogic-admin:latest 
+
+
+## 使用shadcn/ui 库
+### 第一次先初始化
+npx shadcn-ui@latest init
+### 添加组件
+npx shadcn-ui@latest add toast

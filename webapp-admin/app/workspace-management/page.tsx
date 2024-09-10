@@ -4,7 +4,7 @@ const WorkspaceManagement = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Workspace管理</h1>
-      <p>这里是Workspace管理页面。您可以在这里管理您的工作区。</p>
+      <p>暂没开放创建workspace并连接到自定义数据源，请联系管理员创建workspace和数据源</p>
       {/* 在这里添加Workspace管理的具体功能 */}
     </div>
   );

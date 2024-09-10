@@ -8,13 +8,15 @@ import {
   FolderOpen,
   Brain,
   Menu,
-  X
+  X,
+  BookOpen 
 } from "lucide-react";
 
 const menuItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: FolderOpen, label: 'Workspace管理', href: '/workspace-management' },
   { icon: Brain, label: 'Workspace建模', href: '/modeling' },
+  { icon: BookOpen, label: '模型训练', href: '/model-training' }, 
 ];
 
 const Sidebar = () => {
