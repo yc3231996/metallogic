@@ -7,7 +7,8 @@ yarn dev
 ## 使用docker-compose启动
 docker build -t yc3231996/metallogic-admin:latest .
 docker push yc3231996/metallogic-admin:latest
-docker run -d -p 3000:3000 yc3231996/metallogic-admin:latest 
+docker run -d -p 3000:3000 -e API_BASE_URL=http://host.docker.internal:5000 -e API_KEY=p2QtZ91ujRN2db0OyVWPXmvmv7e9zQLBswOiL4REZcY yc3231996/metallogic-admin:latest
+docker run -d -p 3000:3000 --env-file .env.local yc3231996/metallogic-admin:latest
 
 
 ## 使用shadcn/ui 库

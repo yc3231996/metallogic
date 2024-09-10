@@ -35,4 +35,5 @@ metastore目录下，每一个workspace都一个同名的文件，为存储该wo
 ## 使用docker-compose启动
 docker build -t yc3231996/metallogic-api:latest .
 docker push yc3231996/metallogic-api:latest
-docker run -p 8000:8000 yc3231996/metallogic-api:latest 
+docker run -d -p 8000:8000 -e WEAVIATE_URL=http://host.docker.internal:8002 -e WEAVIATE_API_KEY=WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih yc3231996/metallogic-api:latest
+docker run -d -p 8000:8000 --env-file .env yc3231996/metallogic-api:latest
