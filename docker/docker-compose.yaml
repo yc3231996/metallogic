@@ -3,7 +3,7 @@ include:
 
 services:
   metallogic-mockdb:
-    image: postgres:15-alpine
+    image: postgres:latest
     ports:
       - "5432:5432"
     environment:
