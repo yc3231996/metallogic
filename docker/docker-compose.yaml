@@ -2,14 +2,14 @@ include:
   - docker-compose-dify.yaml
 
 services:
-  mockdb:
+  metallogic-mockdb:
     image: postgres:15-alpine
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${MOCKDB_USER:-datagpt}
-      POSTGRES_PASSWORD: ${MOCKDB_PASSWORD:-datagpt}
-      POSTGRES_DB: ${MOCKDB_DB:-datagpt}
+      POSTGRES_USER: datagpt
+      POSTGRES_PASSWORD: datagpt
+      POSTGRES_DB: datagpt
     volumes:
       - ./volumes/mockdb/data:/var/lib/postgresql/data
 
