@@ -2,16 +2,6 @@ include:
   - docker-compose-dify.yaml
 
 services:
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: datagpt@datagpt.com
-  #     PGADMIN_DEFAULT_PASSWORD: datagpt
-  #   ports:
-  #     - "5050:80"
-  #   volumes:
-  #     - ./volumes/pgadmin/data:/var/lib/pgadmin
-
   mockdb:
     image: postgres:15-alpine
     ports:
@@ -23,58 +13,42 @@ services:
     volumes:
       - ./volumes/mockdb/data:/var/lib/postgresql/data
 
-
   metallogic-weaviate:
     image: semitechnologies/weaviate:1.19.0
     restart: always
     volumes:
-      - ./volumes/weaviate:/var/lib/Weaviate
+      - ./volumes/weaviate:/var/lib/weaviate
     env_file:
       - ./openai.env
     environment:
-      # The Weaviate configurations
-      # You can refer to the [Weaviate](https://weaviate.io/developers/weaviate/config-refs/env-vars) documentation for more information.
-      - OPENAI_APIKEY: ${OPENAI_APIKEY}
-      - PERSISTENCE_DATA_PATH: /var/lib/weaviate
-      - AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: false
-      - DEFAULT_VECTORIZER_MODULE: text2vec-openai
-      - ENABLE_MODULES: text2vec-openai
-      - CLUSTER_HOSTNAME: node1
-      - AUTHENTICATION_APIKEY_ENABLED: true
-      - AUTHENTICATION_APIKEY_ALLOWED_KEYS: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
-      - AUTHENTICATION_APIKEY_USERS: datagpt
-      - AUTHORIZATION_ADMINLIST_ENABLED: true
-      - AUTHORIZATION_ADMINLIST_USERS: datagpt
-
+      OPENAI_APIKEY: ${OPENAI_APIKEY}
+      PERSISTENCE_DATA_PATH: /var/lib/weaviate
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "false"
+      DEFAULT_VECTORIZER_MODULE: text2vec-openai
+      ENABLE_MODULES: text2vec-openai
+      CLUSTER_HOSTNAME: node1
+      AUTHENTICATION_APIKEY_ENABLED: "true"
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+      AUTHENTICATION_APIKEY_USERS: datagpt
+      AUTHORIZATION_ADMINLIST_ENABLED: "true"
+      AUTHORIZATION_ADMINLIST_USERS: datagpt
 
   metallogic-api:
     image: yc3231996/metallogic-api:latest
-    # build:
-    #   context: ../api
-    #   dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
       - ./volumes/metallogic/api/metastore:/app/metastore
     environment:
-      - WEAVIATE_URL: http://metallogic-weaviate:8080
-      - WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
-
+      WEAVIATE_URL: http://metallogic-weaviate:8080
+      WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
 
   metallogic-admin:
     image: yc3231996/metallogic-admin:latest
-    # build:
-    #   context: ../webapp-admin
-    #   dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - API_BASE_URL: http://metallogic-api:8000
-      - API_KEY: p2QtZ91ujRN2db0OyVWPXmvmv7e9zQLBswOiL4REZcY
+      API_BASE_URL: http://metallogic-api:8000
+      API_KEY: p2QtZ91ujRN2db0OyVWPXmvmv7e9zQLBswOiL4REZcY
     volumes:
-      - ./volumes/metallogic/admin:/app 
-
-
-
-
-
+      - ./volumes/metallogic/admin:/app

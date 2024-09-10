@@ -25,3 +25,7 @@ sudo snap restart docker
 
 #前端项目：
 
+
+
+## 在 Docker Compose 文件的同级目录创建一个 .env 文件，Docker Compose 会自动读取这个文件中的变量。
+
