@@ -43,6 +43,7 @@ services:
       WEAVIATE_URL: http://metallogic-weaviate:8080
       WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
 
+  # no need volumes, if want to mount a volume, make sure it doesn't override working directory
   metallogic-admin:
     image: yc3231996/metallogic-admin:latest
     ports:
@@ -50,5 +51,3 @@ services:
     environment:
       API_BASE_URL: http://metallogic-api:8000
       API_KEY: p2QtZ91ujRN2db0OyVWPXmvmv7e9zQLBswOiL4REZcY
-    volumes:
-      - ./volumes/metallogic/admin:/app
