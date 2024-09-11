@@ -19,7 +19,7 @@ services:
     ports:
       - "8001:8080"
     volumes:
-      - ./volumes/weaviate:/var/lib/weaviate
+      - ./volumes/metallogic/weaviate:/var/lib/weaviate
     env_file:
       - ./openai.env
     environment:
