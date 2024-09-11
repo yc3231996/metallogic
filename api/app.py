@@ -279,7 +279,7 @@ def search_question_sql(workspace):
             return jsonify({"error": "Question is empty"}), 400
         
         question_sql_db = WeaviateDB(QuestionSql, workspace)
-        results = question_sql_db.search_similar(question, 2)
+        results = question_sql_db.search_similar(question, 3)
         
         # not contain score, may need to enhance to contain score, certainty, distance
         return jsonify({

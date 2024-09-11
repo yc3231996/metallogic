@@ -65,32 +65,59 @@ const QuestionSqlTrainer: React.FC = () => {
     }
   };
 
-  const formatPairsToText = (pairs: QuestionSqlPair[]): string => {
-    return pairs.map(pair => `question: ${pair.question}\nsql: ${pair.sql}`).join('\n\n');
-  };
-
+  interface QuestionSqlPair {
+    question: string;
+    sql: string;
+  }
+  
   const parsePairsFromText = (text: string): QuestionSqlPair[] => {
     const pairs: QuestionSqlPair[] = [];
     const lines = text.split('\n');
     let currentPair: Partial<QuestionSqlPair> = {};
-
+    let currentField: 'question' | 'sql' | null = null;
+    let lineNumber = 0;
+  
     for (const line of lines) {
-      if (line.startsWith('question:')) {
-        if (currentPair.question) {
+      lineNumber++;
+      const trimmedLine = line.trim();
+  
+      if (trimmedLine === '') {
+        if (currentPair.question && currentPair.sql) {
+          pairs.push(currentPair as QuestionSqlPair);
+          currentPair = {};
+          currentField = null;
+        }
+      } else if (trimmedLine.toLowerCase().startsWith('question:')) {
+        if (currentPair.question || currentPair.sql) {
           pairs.push(currentPair as QuestionSqlPair);
           currentPair = {};
         }
-        currentPair.question = line.substring('question:'.length).trim();
-      } else if (line.startsWith('sql:')) {
-        currentPair.sql = line.substring('sql:'.length).trim();
+        currentField = 'question';
+        currentPair.question = line.substring(line.indexOf(':') + 1).trim();
+      } else if (trimmedLine.toLowerCase().startsWith('sql:')) {
+        if (!currentPair.question) {
+          throw new Error(`SQL found without a preceding question at line ${lineNumber}`);
+        }
+        currentField = 'sql';
+        currentPair.sql = line.substring(line.indexOf(':') + 1).trim();
+      } else if (currentField) {
+        currentPair[currentField] += '\n' + line;
+      } else {
+        throw new Error(`Invalid format at line ${lineNumber}: ${line}`);
       }
     }
-
+  
     if (currentPair.question && currentPair.sql) {
       pairs.push(currentPair as QuestionSqlPair);
     }
-
+  
     return pairs;
+  };
+  
+  const formatPairsToText = (pairs: QuestionSqlPair[]): string => {
+    return pairs.map(pair => 
+      `Question:\n${pair.question.trim()}\n\nSQL:\n${pair.sql.trim()}`
+    ).join('\n\n');
   };
 
   const handleTrain = async () => {
