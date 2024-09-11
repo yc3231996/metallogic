@@ -23,7 +23,7 @@ services:
     env_file:
       - ./openai.env
     environment:
-      OPENAI_APIKEY: ${OPENAI_APIKEY}
+      OPENAI_APIKEY: ${OPENAI_API_KEY}
       PERSISTENCE_DATA_PATH: /var/lib/weaviate
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "false"
       DEFAULT_VECTORIZER_MODULE: text2vec-openai
