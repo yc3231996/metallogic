@@ -16,3 +16,15 @@ docker run -d -p 3000:3000 --env-file .env.local yc3231996/metallogic-admin:late
 npx shadcn-ui@latest init
 ### 添加组件
 npx shadcn-ui@latest add toast
+
+
+
+环境变量文件优先级：
+Next.js 会按以下优先级加载环境变量文件：
+.env.$(NODE_ENV).local
+.env.local (不适用于测试环境)
+.env.$(NODE_ENV)
+.env
+其中，$(NODE_ENV) 通常是 development、production 或 test。
+.env.production 在生产环境构建时会自动被加载。
+.env.local 用于所有环境，但在版本控制中通常被忽略

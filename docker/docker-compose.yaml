@@ -54,3 +54,8 @@ services:
     environment:
       API_BASE_URL: http://metallogic-api:8000
       API_KEY: p2QtZ91ujRN2db0OyVWPXmvmv7e9zQLBswOiL4REZcY
+
+  metallogic-conversation:
+    image: yc3231996/metallogic-conversation:latest
+    ports:
+      - "3001:3000"
