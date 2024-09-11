@@ -6,8 +6,6 @@ import { fetchQuestionSqlPairs, buildQuestionSqlPairs, fetchWorkspaces, Workspac
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { Label } from "@/components/ui/label";
-
 
 interface QuestionSqlPair {
   id?: string;
@@ -64,7 +62,7 @@ const QuestionSqlTrainer: React.FC = () => {
       console.error('Error fetching question-sql pairs:', error);
       toast({
         title: "错误",
-        description: "获取问题-SQL对失败",
+        description: "获取问题-SQL样本失败",
         variant: "destructive",
       });
     } finally {
@@ -139,7 +137,7 @@ const QuestionSqlTrainer: React.FC = () => {
     if (pairs.length === 0) {
       toast({
         title: "错误",
-        description: "没有找到有效的问题-SQL对",
+        description: "没有找到有效的问题-SQL样本",
         variant: "destructive",
       });
       return;
@@ -150,7 +148,7 @@ const QuestionSqlTrainer: React.FC = () => {
     if (invalidPairs.length > 0) {
       toast({
         title: "错误",
-        description: `发现 ${invalidPairs.length} 个无效的问题-SQL对（问题或SQL为空）`,
+        description: `发现 ${invalidPairs.length} 个无效的问题-SQL样本（问题或SQL为空）`,
         variant: "destructive",
       });
       return;
@@ -161,13 +159,13 @@ const QuestionSqlTrainer: React.FC = () => {
       const result = await buildQuestionSqlPairs(selectedWorkspace, { question_sql_list: pairs });
       toast({
         title: "成功",
-        description: `成功构建 ${result.count} 个问题-SQL对`,
+        description: `成功构建 ${result.count} 个问题-SQL样本`,
       });
     } catch (error) {
       console.error('Error building question-sql pairs:', error);
       toast({
         title: "错误",
-        description: error instanceof Error ? error.message : "构建问题-SQL对失败",
+        description: error instanceof Error ? error.message : "构建问题-SQL样本失败",
         variant: "destructive",
       });
     } finally {
@@ -196,7 +194,7 @@ const QuestionSqlTrainer: React.FC = () => {
       <div>
         <p className="text-lg font-bold">问题-SQL样本</p>
         <p className="text-sm text-gray-600 mb-2">
-          • 每个"问题-SQL"样本之间用空行分隔； 问题以"Question:"开头，SQL内容以"SQL:"开头；都支持跨行
+          • 每个问题-SQL样本之间用空行分隔； 问题以Question:开头，SQL内容以SQL:开头；都支持跨行
           <br />• 可在SQL内容中包含其他上下文信息，如名词解释，指标口径
         </p>
         <Textarea
@@ -209,8 +207,8 @@ SQL: SELECT COUNT(*) FROM customers;
 
 Question: What is the total sales for the year 2023?
 SQL: SELECT SUM(sales) FROM transactions WHERE YEAR(date) = 2023;
--- 上下文：sales字段表示每笔交易的销售额
--- transactions表包含所有交易记录，date字段为交易日期
+上下文: sales字段表示每笔交易的销售额
+transactions表包含所有交易记录, date字段为交易日期
 `}
           disabled={isLoading}
         />
