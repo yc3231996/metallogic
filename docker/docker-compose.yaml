@@ -16,6 +16,8 @@ services:
   metallogic-weaviate:
     image: semitechnologies/weaviate:1.19.0
     restart: always
+    ports:
+      - "8001:8080"
     volumes:
       - ./volumes/weaviate:/var/lib/weaviate
     env_file:
