@@ -36,6 +36,17 @@ export interface QuestionSqlPair {
   sql: string;
 }
 
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  token?: string;
+  message?: string;
+}
+
 
 const buildApiUrl = (path: string) => `${config.publicApiBaseUrl}${path}`;
 
@@ -114,5 +125,23 @@ export const buildQuestionSqlPairs = async (workspace: string, params: { questio
   if (!response.ok) {
     throw new Error('Failed to build question-sql pairs');
   }
+  return response.json();
+};
+
+
+//for auth
+export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
+  const response = await fetch(buildApiUrl('/auth'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
+  
+  if (!response.ok) {
+    throw new Error('Login request failed');
+  }
+  
   return response.json();
 };
