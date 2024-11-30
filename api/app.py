@@ -216,6 +216,9 @@ def execute_sql():
         result = db_manager.execute_query(sql)
         return jsonify({"data": result})
     except Exception as e:
+        print(f"error occured: {str(e)}")
+        import traceback
+        print(f"error trace:\n{traceback.format_exc()}")
         return jsonify({"error": str(e)}), 500
 
 
