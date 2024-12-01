@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 文件名设置
-OUTPUT_FILE="metallogic_images.tar"
+OUTPUT_FILE="${1:-/data/metallogic_images.tar}"  # 从参数读取文件路径，默认值为 /data/metallogic_images.tar
 
 # 提取镜像列表
 IMAGES=$(docker compose config | grep 'image:' | awk '{print $2}')
