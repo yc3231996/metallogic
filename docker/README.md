@@ -1,0 +1,2 @@
+更新DIFY版本的时候，docker目录下的所有内容都要从dify拷贝过来，同时手动生成.env文件并更新该文件
+部署的时候，手动添加openai.env文件（在docker-compose.yaml中指定了）
