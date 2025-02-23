@@ -5,7 +5,7 @@ services:
   metallogic-mockdb:
     image: postgres:latest
     ports:
-      - "5432:5432"
+      - "6432:5432"
     environment:
       POSTGRES_USER: datagpt
       POSTGRES_PASSWORD: datagpt
