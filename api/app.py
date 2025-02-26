@@ -3,10 +3,11 @@ import json
 import logging
 import traceback
 from functools import wraps
-from dbengine import DatabaseManager
-from metastore import MetadataStore
-from api_key_manager import load_api_keys
-from vectordb import QuestionSql, WeaviateDB
+from db.dbengine import DatabaseManager
+from db.bigquery import BigQueryManager
+from db.metastore import MetadataStore
+from utils.api_key_manager import load_api_keys
+from db.vectordb import QuestionSql, WeaviateDB
 
 app = Flask(__name__)
 
@@ -35,36 +36,48 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 	
 
-@app.route('/connect', methods=['POST'])
+@app.route('/workspaces', methods=['POST'])
 @require_api_key
-def connect_to_database():
+def create_workspace():
     try:
         data = request.get_json()
         
-        conn_str = data.get('conn_str')
+        workspace = data.get('workspace')
         db_type = data.get('db_type')
-        username = data.get('username')
-        password = data.get('password')
-        host = data.get('host')
-        port = data.get('port')
-        database = data.get('database')
-        workspace = data.get('workspace') # worksapce as worksapce id, mutable identifier
-        workspace_name = data.get('workspace_name')
+        conn_str = data.get('conn_str')
         
-        # if connection_string is provided, ignore other parameters, otherwise create connection string for persistence
-        if not conn_str and all([db_type, username, password, host, port, database]):
-            conn_str = f"{db_type}://{username}:{password}@{host}:{port}/{database}"
+        # BigQuery specific parameters
+        credentials_json_str = data.get('credentials_json_str')
+        project_id = data.get('project_id')
 
-        if not conn_str:
-            raise ValueError("Insufficient parameters provided for database connection")
-        
-        # test connectivitity
-        db_manager = DatabaseManager(connection_string=conn_str)
+        # 根据db_type选择合适的数据库管理器
+        if db_type == 'bigquery':
+            if not credentials_json_str or not project_id:
+                raise ValueError("BigQuery requires credentials_json_str and project_id")
+            db_manager = BigQueryManager.get_instance(
+                project_id=project_id,
+                credentials_json_str=credentials_json_str
+            )
+            # 保存凭证信息
+            conn_info = {
+                'type': 'bigquery',
+                'credentials_json_str': credentials_json_str,
+                'project_id': project_id
+            }
+            _save_workspace(workspace, json.dumps(conn_info))
+        else:
+            if not conn_str:
+                raise ValueError("Insufficient parameters provided for database connection")
+            db_manager = DatabaseManager.get_instance(conn_str)
+            # 统一使用JSON格式保存连接信息
+            conn_info = {
+                'type': db_type or 'unknown',
+                'conn_str': conn_str
+            }
+            _save_workspace(workspace, json.dumps(conn_info))
+
+        # 测试连接并获取表列表
         tables = db_manager.get_tables()
-
-        # if no exception, UPSERT connection string for the workspace
-        _save_workspace(workspace or "default", conn_str)
-        
         return jsonify({"tables": tables})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -95,24 +108,67 @@ def _check_workspace_exist(workspace):
         raise ValueError(f"workspace '{workspace}' not exist")
 
 
-# return default workspace if workspace is not provided
 def get_dbmanager(workspace):
-    connection_string = _get_workspace(workspace or "default")
-    return DatabaseManager(connection_string=connection_string)
+    """
+    根据workspace获取适当的数据库管理器实例
+    """
+    conn_info_str = _get_workspace(workspace)
+    
+    try:
+        # 尝试解析连接信息
+        conn_info = json.loads(conn_info_str)
+        
+        if not isinstance(conn_info, dict):
+            # 如果不是字典，则可能是旧格式的连接字符串
+            return DatabaseManager.get_instance(conn_info_str)
+        
+        # 根据类型创建相应的数据库管理器
+        if conn_info.get('type') == 'bigquery':
+            return BigQueryManager.get_instance(
+                project_id=conn_info.get('project_id'),
+                credentials_json_str=conn_info.get('credentials_json_str')
+            )
+        else:
+            # 其他类型的数据库使用conn_str
+            return DatabaseManager.get_instance(conn_info.get('conn_str'))
+            
+    except json.JSONDecodeError:
+        # 兼容旧格式：如果不是JSON，则假定为普通的连接字符串
+        return DatabaseManager.get_instance(conn_info_str)
+    except Exception as e:
+        # 处理其他异常
+        raise Exception(f"Failed to get database manager: {str(e)}")
 
 
 @app.route('/workspaces', methods=['GET'])
 @require_api_key
 def get_workspaces():
-    workspaces = [{"id": key, "name": key} for key in _get_workspace().keys()]
+    workspaces_data = _get_workspace()
+    workspaces = []
+    
+    for key, value in workspaces_data.items():
+        try:
+            # 尝试解析连接信息获取type
+            conn_info = json.loads(value)
+            workspace_type = conn_info.get('type', 'unknown')
+        except (json.JSONDecodeError, TypeError):
+            # 如果不是有效的JSON，设置为unknown
+            workspace_type = 'unknown'
+            
+        workspaces.append({
+            "id": key, 
+            "name": key,
+            "type": workspace_type
+        })
+    
     return jsonify({"workspaces": workspaces})
 
 
-@app.route('/workspace/<workspace>', methods=['DELETE'])
-@require_api_key
-def del_workspace(workspace):    
+@app.route('/workspaces', methods=['DELETE'])
+def del_workspace():
+    workspace = request.args.get('workspace')
     if not workspace:
-        return jsonify({"error": "Workspace parameter not provided"}), 400
+        return jsonify({"error": "未提供工作区ID"}), 400
     try:
         _check_workspace_exist(workspace)
         _del_workspace(workspace)

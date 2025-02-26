@@ -1,5 +1,5 @@
 import unittest
-from api.vectordb import WeaviateDB, QuestionSql, TermDesc
+from db.vectordb import WeaviateDB, QuestionSql, TermDesc
 
 class TestWeaviateDB(unittest.TestCase):
     def setUp(self):

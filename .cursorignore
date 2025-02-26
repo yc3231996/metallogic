@@ -1,0 +1,17 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+/api/mockdata
+**/__pycache__
+**/.env
+/**/venv
+/api/config/gen-lang-client-0786739350-9300cb3f1bc9.json
+/api/metastore
+
+**/.next
+**/node_modules
+**/dist
+**/build
+**/public
+**/static
+
+/webapp-conversation
+/webapp-admin/components/ui

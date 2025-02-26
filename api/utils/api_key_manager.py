@@ -1,14 +1,18 @@
 import json
 import secrets
 import sys
+import os
 
-API_KEYS_FILE = 'api_keys.json'
+# 使用基于脚本文件位置的绝对路径
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+API_KEYS_FILE = os.path.join(os.path.dirname(SCRIPT_DIR), 'config', 'api_keys.json')
 
 def load_api_keys():
     try:
         with open(API_KEYS_FILE, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
+        print(f"API密钥文件未找到: {API_KEYS_FILE}")
         return {}
 
 def save_api_keys(api_keys):

@@ -4,6 +4,7 @@ import config from '@/config';
 export interface Workspace {
   id: string;
   name: string;
+  type: string;
 }
 
 export type Table = string;
@@ -47,15 +48,33 @@ export interface LoginResponse {
   message?: string;
 }
 
+export interface CreateWorkspaceParams {
+  workspace: string;
+  db_type: string;
+  conn_str?: string;
+  credentials_json_str?: string;
+  project_id?: string;
+}
+
+export interface CreateWorkspaceResponse {
+  tables: string[];
+}
 
 const buildApiUrl = (path: string) => `${config.publicApiBaseUrl}${path}`;
 
 export const fetchWorkspaces = async (): Promise<Workspace[]> => {
-  const response = await fetch(buildApiUrl('/workspaces'));
-  if (!response.ok) {
-    throw new Error('Failed to fetch workspaces');
+  try {
+    const response = await fetch(buildApiUrl('/workspaces'));
+    if (!response.ok) {
+      throw new Error('Failed to fetch workspaces');
+    }
+    const data = await response.json();
+    // 确保返回的数据是数组格式
+    return Array.isArray(data) ? data : (data.workspaces || []);
+  } catch (error) {
+    console.error('Error fetching workspaces:', error);
+    return [];
   }
-  return response.json();
 };
 
 export const fetchTables = async (workspace: string): Promise<Table[]> => {
@@ -144,4 +163,31 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
   }
   
   return response.json();
+};
+
+export const createWorkspace = async (params: CreateWorkspaceParams): Promise<CreateWorkspaceResponse> => {
+  const response = await fetch(buildApiUrl('/workspaces'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to create workspace');
+  }
+  
+  return response.json();
+};
+
+export const deleteWorkspace = async (workspace: string): Promise<void> => {
+  const response = await fetch(buildApiUrl(`/workspaces?workspace=${workspace}`), {
+    method: 'DELETE',
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to delete workspace ${workspace}`);
+  }
 };

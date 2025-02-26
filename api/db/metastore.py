@@ -2,6 +2,7 @@ import json
 import os
 
 # use worksapce_id as filename
+# not thread safe, add lock ilater
 class MetadataStore:
     def __init__(self, filename):
         self._ensure_directory_exists()
@@ -15,16 +16,22 @@ class MetadataStore:
             base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'metastore'))
         self.basepath = base_path
         os.makedirs(self.basepath, exist_ok=True)
-        print(f"Metadata store directory created at {self.basepath}")
+        print(f"Metadata store directory at {self.basepath}")
 
     def _ensure_file_exists(self):
         try:
             if not os.path.exists(self.filepath):
                 with open(self.filepath, 'w') as f:
                     json.dump({}, f)
-                    print(f"Metadata store file created at {self.filepath}")
+                    print(f"Metadata store file at {self.filepath}")
         except Exception as e:
             print(f"Error creating file: {e}")
+
+    @staticmethod
+    def check_workspace_exist(workspace: str) -> None:
+        all_workspaces = MetadataStore("all-workspaces").query()
+        if workspace not in all_workspaces:
+            raise ValueError(f"workspace '{workspace}' not exist")
 
     def _load_store(self):
         with open(self.filepath, 'r') as f:

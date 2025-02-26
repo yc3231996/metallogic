@@ -1,7 +1,5 @@
 import unittest
-from dbengine import DatabaseManager
-import unittest
-from dbengine import DatabaseManager
+from db.dbengine import DatabaseManager
 
 
 class TestDatabaseManager(unittest.TestCase):

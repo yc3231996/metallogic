@@ -1,11 +1,15 @@
 from sqlalchemy import MetaData, create_engine, text, inspect
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.engine import URL
-from sqlalchemy.schema import CreateTable
 from contextlib import contextmanager
 import re
+from sqlalchemy.pool import QueuePool
+from threading import Lock
 
+# 支持SQL数据库
 class DatabaseManager:
+    _instances = {}  # 用于缓存DatabaseManager实例
+    _lock = Lock()   # 用于线程同步
+
     def __init__(self, connection_string=None, db_type=None, username=None, password=None, host=None, port=None, database=None):
         if connection_string:
             self.connection_string = connection_string
@@ -13,7 +17,52 @@ class DatabaseManager:
             self.connection_string = f"{db_type}://{username}:{password}@{host}:{port}/{database}"
         else:
             raise ValueError("Insufficient parameters provided for database connection")
-        self.engine = create_engine(self.connection_string)
+        
+        self._create_engine()
+
+    def _create_engine(self):
+        self.engine = create_engine(
+            self.connection_string,
+            poolclass=QueuePool,
+            pool_size=5,  # 连接池的大小
+            max_overflow=10,  # 超过pool_size后的最大连接数
+            pool_timeout=30,  # 获取连接的超时时间
+            pool_recycle=1800  # 连接重置时间，防止连接过期
+        )
+
+    @classmethod
+    def get_instance(cls, connection_string):
+        """
+        获取DatabaseManager实例的线程安全方法
+        如果实例不存在或已失效，则创建新实例
+        """
+        with cls._lock:
+            instance = cls._instances.get(connection_string)
+            
+            # 检查实例是否存在且连接是否有效
+            if instance is not None:
+                try:
+                    if instance.is_connected():
+                        return instance
+                except Exception:
+                    # 如果连接检查失败，删除现有实例并创建新实例
+                    if connection_string in cls._instances:
+                        try:
+                            cls._instances[connection_string].engine.dispose()
+                        except:
+                            pass
+                        del cls._instances[connection_string]
+            
+            try:
+                # 创建新实例
+                instance = cls(connection_string=connection_string)
+                if instance.is_connected():
+                    cls._instances[connection_string] = instance
+                    return instance
+                else:
+                    raise SQLAlchemyError("Failed to establish database connection")
+            except Exception as e:
+                raise SQLAlchemyError(f"Failed to create database instance: {str(e)}")
 
     @contextmanager
     def _get_connection(self):
@@ -117,7 +166,8 @@ class DatabaseManager:
 
 
 if __name__ == "__main__":
-    db_manager = DatabaseManager(connection_string=r"postgresql://datagpt:datagpt@localhost/datagpt")
-    query = "SELECT * FROM salesdata"
+    # db_manager = DatabaseManager(connection_string=r"postgresql://datagpt:datagpt@localhost/datagpt")
+    db_manager = DatabaseManager(connection_string=r"postgresql://postgres.ntzacakldnwbrjuuvlyg:KUgmcvYUwQmb4b8s@aws-0-us-west-1.pooler.supabase.com:6543/postgres")
+    query = "SELECT * FROM test"
     results = db_manager.execute_query(query)
     print(results)
