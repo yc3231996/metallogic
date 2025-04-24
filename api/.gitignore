@@ -4,3 +4,5 @@
 venv
 /config/gen-lang-client-0786739350-9300cb3f1bc9.json
 /db/metastore
+/tmp
+/.chainlit

@@ -9,3 +9,11 @@ rsync -avz --progress ubuntu@remote:/data/metallogic_images.tar /home/ec2-user
 
 使用如下命令load：
 docker load -i my_image.tar
+
+
+UCloud - Ubuntu内磁盘扩容：https://docs.ucloud.cn/uhost/guide/disk
+sudo apt-get install cloud-initramfs-growroot
+LANG=en_US.UTF-8
+growpart /dev/vda 1
+resize2fs /dev/vda1 (ext4文件系统)
+df -TH

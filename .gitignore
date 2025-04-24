@@ -1,3 +1,5 @@
 /api/__pycache__
 /api/metastore
 /api/.env
+
+/.cursor/mcp.json

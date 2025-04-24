@@ -13,6 +13,22 @@ weaviate-client>=3.20.0
 openai>=1.62.0
 
 # Other potential dependencies
-#numpy==1.24.3
-#pandas==2.0.2
+numpy>=1.24.3
+pandas>=2.0.2
+matplotlib>=3.7.1
 # sqlglot>=25.6.1
+
+# E2B,>=0.11.0
+e2b
+e2b-code-interpreter
+python-dotenv>=1.0.1
+
+langchain
+langchain-community
+langgraph
+streamlit
+
+langchain-openai
+langchain-google-vertexai
+
+# browser_use， pip install browser-use，playwright install
